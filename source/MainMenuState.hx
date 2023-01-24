@@ -162,7 +162,7 @@ switch(label)
 			chars.animation.play('dance');
 			chars.flipX = false;
 		}
-		else if (FlxG.random.bool(30.90))
+		else if (FlxG.random.bool(35.90))
 		{
 			chars.y += 160;
 			chars.x += 40;
@@ -172,6 +172,16 @@ switch(label)
 			chars.animation.play('dance');
 			chars.flipX = false;
 		}
+		else if (FlxG.random.bool(23.90))
+			{
+				chars.y += 160;
+				chars.x += 40;
+				chars.frames = Paths.getSparrowAtlas('menuCharacters/qboMenu', 'shared');
+				chars.animation.addByPrefix('dance', 'idle', 24, true);
+				chars.scale.set(1, 1);
+				chars.animation.play('dance');
+				chars.flipX = false;
+			}
 		else if (FlxG.random.bool(100))
 		{
 			chars.y += 95;

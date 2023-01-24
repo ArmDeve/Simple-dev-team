@@ -21,7 +21,7 @@ class CreditsState extends MusicBeatState
     var credGrp:FlxTypedGroup<Alphabet>;
     var iconArray:Array<Icons> = [];
 
-    // IF YOU GET AN ERROR PLEASE IMPORT PATHS TO THE STATE
+    // IF YOU GET AN ERROR PLEASE IMPORT CredsStuff TO THE STATE
 
     var desc:FlxText;
     var intendedColor:Int;
@@ -35,9 +35,9 @@ class CreditsState extends MusicBeatState
 
         Main.toggleMem(false);
 
-        for (i in 0...Paths.creditsStuff.length)
+        for (i in 0...CredsStuff.creditsStuff.length)
             {
-        someShit.push(new SHIT(FlxColor.fromString(Paths.creditsStuff[i][3])));
+        someShit.push(new SHIT(FlxColor.fromString(CredsStuff.creditsStuff[i][3])));
             }
 
         bg = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
@@ -57,7 +57,7 @@ class CreditsState extends MusicBeatState
         box.antialiasing = PreferencesOptions.Antialiasing;
         add(box);
 
-        desc = new FlxText(0, 0, 0, Paths.creditsStuff[0][1] + '\n\n\n' + Paths.creditsStuff[0][2], 60);
+        desc = new FlxText(0, 0, 0, CredsStuff.creditsStuff[0][1] + '\n\n\n' + CredsStuff.creditsStuff[0][2], 60);
         //desc.x = 531;
         desc.y = 90;
         desc.scrollFactor.set();
@@ -68,17 +68,17 @@ class CreditsState extends MusicBeatState
         credGrp = new FlxTypedGroup<Alphabet>();
         add(credGrp);
 
-        for(i in 0...Paths.creditsStuff.length)
+        for(i in 0...CredsStuff.creditsStuff.length)
             {
                 // NEW CREDITS BABEEEEEEE
-                var creditsShit = new Alphabet(0, (20 * i) + 0, Paths.creditsStuff[i][0], false, false, 0, 0.75);
+                var creditsShit = new Alphabet(0, (20 * i) + 0, CredsStuff.creditsStuff[i][0], false, false, 0, 0.75);
                 creditsShit.x += 150;
                 creditsShit.isMenuItem = true;
                 creditsShit.forceX = creditsShit.x;
                 creditsShit.targetY = i;
                 credGrp.add(creditsShit);
 
-                var Icon:Icons = new Icons('credits/' + Paths.creditsStuff[i][0]);
+                var Icon:Icons = new Icons('credits/' + CredsStuff.creditsStuff[i][0]);
                 Icon.Xsize = 0.7;
                 Icon.Antialiasing = PreferencesOptions.Antialiasing;
                 Icon.Ysize = 0.7;
@@ -110,7 +110,7 @@ class CreditsState extends MusicBeatState
            FlxTween.tween(desc,{alpha : 0},0.2,{ease:FlxEase.cubeIn,onComplete: function(twn:FlxTween)
                 {
                     FlxTween.tween(desc,{alpha : 1},0.2,{ease:FlxEase.cubeOut});
-                    desc.text = Paths.creditsStuff[curSelected][1] + '\n\n\n' + Paths.creditsStuff[curSelected][2];
+                    desc.text = CredsStuff.creditsStuff[curSelected][1] + '\n\n\n' + CredsStuff.creditsStuff[curSelected][2];
                 }
             });
 
@@ -132,7 +132,7 @@ class CreditsState extends MusicBeatState
             }
 
       if (controls.ACCEPT)
-        FlxG.openURL(Paths.creditsStuff[curSelected][4]);
+        FlxG.openURL(CredsStuff.creditsStuff[curSelected][4]);
 
                 if (controls.BACK)
                     {
@@ -229,4 +229,81 @@ class Icons extends FlxSprite
 			scale.set(Xsize, Ysize);
 		}
 	}
+}
+
+class CredsStuff
+{
+    static public var creditsStuff:Array<Dynamic> = 
+	[ 
+	[
+	'AmsDev', // name|icon
+	'Main Programmer', // work
+	'are you sure you re\nnot gay?\nprove otherwise lol\npls suscribe to my\nchannel XD', // sentence
+	'#727FB3', // color
+	'https://www.youtube.com/channel/UCLiN7NfSI61E7Fm6g-isUGA' // link
+	],
+	[
+    'MrNiz',
+	'Extra Programmer',
+	'Pixel Transition\nCoder',
+	'#FFFFFF',
+	'https://twitter.com/MrNizy'
+	],
+	[
+	'AngelUchiha', 
+	'Voice Actor', 
+	'If you feel so dumb\nthink about me, you\nwill feel better',
+	'#2C2624',
+	'https://twitter.com/AngelUchihaaa'
+	],
+	[
+	'AssmanBruh!',
+	'Main Artist',
+	'Hi bro im assman\nPlaza good',
+	'#FFFFFF',
+	'https://www.youtube.com/@assmanbruh7030'
+	],
+    [
+    'Jarcor',
+    'Dead OST Creator',
+    'UwU',
+    '#FFFFFF',
+    'https://www.youtube.com/@assmanbruh7030'
+    ],
+    [
+    'Qbo',
+    'Video Trailer',
+    'ANACHEI',
+    '#FFFFFF',
+    'https://www.youtube.com/@assmanbruh7030'
+    ],
+	[
+	'AndyGamer',
+	'Icon Artist',
+	'AMONGUS!!?? WERE!!',
+	'#2D2C2A',
+	'https://twitter.com/AndyGamer1116YT'
+	],
+	[
+	'DrawPant',
+	'Extra Animator',
+	'hi guys im sas,\nplay friday night\nrayman mod',
+	'#FF33FF',
+	'https://twitter.com/DrawPant'
+	],
+	[
+	'HiroBerserk',
+	'App Icon Artist',
+	'Tmr pe\n(Im peruvian XD)',
+	'#3B93C6',
+	'https://twitter.com/berserk_hiro?t=IGJ8m9FVHz-ugqw1aYsRJA&s=09'
+	],
+	[
+	'Bit',
+	'Ratings Artist',
+	'I am the least fan\nand burn Paraguay',
+	'#FFFFFF',
+	'https://twitter.com/Kasler_dumb'
+	]
+    ];
 }

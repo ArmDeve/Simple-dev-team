@@ -11,65 +11,6 @@ class Paths
 
 	static var currentLevel:String;
 	static var lib = '';
-    static public var creditsStuff:Array<Dynamic> = 
-	[ 
-	[
-	'AmsDev', // name|icon
-	'Main Programmer', // work
-	'are you sure you re\nnot gay?\nprove otherwise lol\npls suscribe to my\nchannel XD', // sentence
-	'#727FB3', // color
-	'https://www.youtube.com/channel/UCLiN7NfSI61E7Fm6g-isUGA' // link
-	],
-	[
-    'MrNiz',
-	'Extra Programmer',
-	'Pixel Transition\nCoder',
-	'#FFFFFF',
-	'https://twitter.com/MrNizy'
-	],
-	[
-	'AngelUchiha', 
-	'Voice Actor', 
-	'If you feel so dumb\nthink about me, you\nwill feel better',
-	'#2C2624',
-	'https://twitter.com/AngelUchihaaa'
-	],
-	[
-	'AssmanBruh!',
-	'Main Artist',
-	'Hi bro im assman\nPlaza good',
-	'#FFFFFF',
-	'https://www.youtube.com/@assmanbruh7030'
-	],
-	[
-	'AndyGamer',
-	'Icon Artist',
-	'AMONGUS!!?? WERE!!',
-	'#2D2C2A',
-	'https://twitter.com/AndyGamer1116YT'
-	],
-	[
-	'DrawPant',
-	'Extra Animator',
-	'hi guys im sas,\nplay friday night\nrayman mod',
-	'#FF33FF',
-	'https://twitter.com/DrawPant'
-	],
-	[
-	'HiroBerserk',
-	'App Icon Artist',
-	'Tmr pe\n(Im peruvian XD)',
-	'#3B93C6',
-	'https://twitter.com/berserk_hiro?t=IGJ8m9FVHz-ugqw1aYsRJA&s=09'
-	],
-	[
-	'Bit',
-	'Ratings Artist',
-	'I am the least fan\nand burn Paraguay',
-	'#FFFFFF',
-	'https://twitter.com/Kasler_dumb'
-	]
-    ];
 
 	static public function setCurrentLevel(name:String)
 	{
