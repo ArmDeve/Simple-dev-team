@@ -71,7 +71,7 @@ class PlayState extends MusicBeatState
 
 	private var notes:FlxTypedGroup<Note>;
 	private var unspawnNotes:Array<Note> = [];
-	private var enemyStrums:FlxTypedGroup<FlxSprite>;
+	private var enemyStrums:FlxTypedGroup<StaticStrums>;
 
 	/*private var mustHitSection:Bool = false;
 	private var charCam:Array<Float> = [0,0,0,0];
@@ -87,7 +87,7 @@ class PlayState extends MusicBeatState
 
 	public var strumLineNotes:FlxTypedGroup<FlxSprite>;
 	private var hudGroup:FlxTypedGroup<FlxSprite>;
-	private var playerStrums:FlxTypedGroup<FlxSprite>;
+	private var playerStrums:FlxTypedGroup<StaticStrums>;
 
 	public static var instance:PlayState = null;
 	
@@ -140,7 +140,7 @@ class PlayState extends MusicBeatState
 	var bgGirls:BackgroundGirls;
 
 	var comboPercentaje:Int = 0;
-
+public static var isPixelStage:Bool = false;
 	var talking:Bool = true;
 	var missesCounter:Int = 0;
 	var goodHitsCounter:Int = 0;
@@ -181,6 +181,8 @@ class PlayState extends MusicBeatState
 	{
 		instance = this;
 
+		if (curSong.startsWith('school'))
+			isPixelStage = true;
 
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
@@ -696,8 +698,8 @@ add(gf);
 		hudGroup = new FlxTypedGroup<FlxSprite>();
 		add(hudGroup);
 
-		playerStrums = new FlxTypedGroup<FlxSprite>();
-		enemyStrums = new FlxTypedGroup<FlxSprite>();
+		playerStrums = new FlxTypedGroup<StaticStrums>();
+		enemyStrums = new FlxTypedGroup<StaticStrums>();
 
 		// startCountdown();
 
@@ -1228,86 +1230,12 @@ if (curStage.startsWith('school'))
 		for (i in 0...4)
 		{
 			// FlxG.log.add(i);
-			var babyArrow:FlxSprite;
-			babyArrow = new FlxSprite(45 + strumLine.x, strumLine.y);
-
-			switch (curStage)
-			{
-				case 'school' | 'schoolEvil':
-					babyArrow.loadGraphic(Paths.image('weeb/pixelUI/arrows-pixels'), true, 17, 17);
-					babyArrow.animation.add('green', [6]);
-					babyArrow.animation.add('red', [7]);
-					babyArrow.animation.add('blue', [5]);
-					babyArrow.animation.add('purplel', [4]);
-
-					babyArrow.setGraphicSize(Std.int(babyArrow.width * daPixelZoom));
-					babyArrow.updateHitbox();
-					babyArrow.antialiasing = false;
-
-					switch (Math.abs(i))
-					{
-						case 0:
-							babyArrow.x += Note.swagWidth * 0;
-							babyArrow.animation.add('static', [0]);
-							babyArrow.animation.add('pressed', [4, 8], 12, false);
-							babyArrow.animation.add('confirm', [12, 16], 24, false);
-						case 1:
-							babyArrow.x += Note.swagWidth * 1;
-							babyArrow.animation.add('static', [1]);
-							babyArrow.animation.add('pressed', [5, 9], 12, false);
-							babyArrow.animation.add('confirm', [13, 17], 24, false);
-						case 2:
-							babyArrow.x += Note.swagWidth * 2;
-							babyArrow.animation.add('static', [2]);
-							babyArrow.animation.add('pressed', [6, 10], 12, false);
-							babyArrow.animation.add('confirm', [14, 18], 12, false);
-						case 3:
-							babyArrow.x += Note.swagWidth * 3;
-							babyArrow.animation.add('static', [3]);
-							babyArrow.animation.add('pressed', [7, 11], 12, false);
-							babyArrow.animation.add('confirm', [15, 19], 24, false);
-					}
-
-				default:
-					babyArrow.frames = Paths.getSparrowAtlas('NOTE_assets');
-					babyArrow.animation.addByPrefix('green', 'arrowUP');
-					babyArrow.animation.addByPrefix('blue', 'arrowDOWN');
-					babyArrow.animation.addByPrefix('purple', 'arrowLEFT');
-					babyArrow.animation.addByPrefix('red', 'arrowRIGHT');
-
-					babyArrow.antialiasing = PreferencesOptions.Antialiasing;
-					babyArrow.setGraphicSize(Std.int(babyArrow.width * 0.7));
-
-					switch (Math.abs(i))
-					{
-						case 0:
-							babyArrow.x += Note.swagWidth * 0;
-							babyArrow.animation.addByPrefix('static', 'arrowLEFT');
-							babyArrow.animation.addByPrefix('pressed', 'left press', 24, false);
-							babyArrow.animation.addByPrefix('confirm', 'left confirm', 24, false);
-						case 1:
-							babyArrow.x += Note.swagWidth * 1;
-							babyArrow.animation.addByPrefix('static', 'arrowDOWN');
-							babyArrow.animation.addByPrefix('pressed', 'down press', 24, false);
-							babyArrow.animation.addByPrefix('confirm', 'down confirm', 24, false);
-						case 2:
-							babyArrow.x += Note.swagWidth * 2;
-							babyArrow.animation.addByPrefix('static', 'arrowUP');
-							babyArrow.animation.addByPrefix('pressed', 'up press', 24, false);
-							babyArrow.animation.addByPrefix('confirm', 'up confirm', 24, false);
-						case 3:
-							babyArrow.x += Note.swagWidth * 3;
-							babyArrow.animation.addByPrefix('static', 'arrowRIGHT');
-							babyArrow.animation.addByPrefix('pressed', 'right press', 24, false);
-							babyArrow.animation.addByPrefix('confirm', 'right confirm', 24, false);
-					}
-			}
+			var babyArrow:StaticStrums;
+			babyArrow = new StaticStrums(45 + strumLine.x, strumLine.y, 'NOTE_assets', i, player);
 
 			babyArrow.updateHitbox();
-			babyArrow.scrollFactor.set();
+				babyArrow.scrollFactor.set();
 
-			if (!isStoryMode)
-			{
 				babyArrow.y += 150;
 				babyArrow.alpha = 0;
 
@@ -1321,7 +1249,6 @@ if (curStage.startsWith('school'))
 					babyArrow.scale.set(0.4, 0.4);
 					FlxTween.tween(babyArrow, {y: babyArrow.y - 150, alpha: 0.85, 'scale.x': 0.7, 'scale.y': 0.7}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
 				}
-		}
 
 			babyArrow.ID = i;
 
@@ -1337,11 +1264,14 @@ if (curStage.startsWith('school'))
 					babyArrow.x -= 999;
 			}
 
-			babyArrow.animation.play('static');
-			babyArrow.x += 50;
-			babyArrow.x += ((FlxG.width / 2) * player);
+			enemyStrums.forEach(function(spr:StaticStrums)
+				{					
+					spr.centerOffsets(); 
+				});
 
-			strumLineNotes.add(babyArrow);
+				babyArrow.setPositionStatic();
+	
+				strumLineNotes.add(babyArrow);
 		}
 	}
 
