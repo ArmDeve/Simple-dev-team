@@ -2215,248 +2215,195 @@ rating.cameras = [camHUD];
 		curSection += 1;
 	}
 
+	var mashViolations:Int = 0;
 	private function keyShit():Void
 	{
-		// HOLDING
-		var up =  (!PreferencesOptions.AutoPlay ? controls.UP : false);
-		var upP = (!PreferencesOptions.AutoPlay ? controls.UP_P : false);
-		var upR = (!PreferencesOptions.AutoPlay ? controls.UP_R : false);
-		
-		var right =  (!PreferencesOptions.AutoPlay ? controls.RIGHT : false);
-		var rightP = (!PreferencesOptions.AutoPlay ? controls.RIGHT_P : false);
-		var rightR = (!PreferencesOptions.AutoPlay ? controls.RIGHT_R : false);
+		var holdArray:Array<Bool> = [
+			!PreferencesOptions.AutoPlay ? controls.LEFT : false, 
+			!PreferencesOptions.AutoPlay ? controls.DOWN : false, 
+			!PreferencesOptions.AutoPlay ? controls.UP : false, 
+			!PreferencesOptions.AutoPlay ? controls.RIGHT : false
+		];
 
-		var leftP = (!PreferencesOptions.AutoPlay ? controls.LEFT_P : false);
-		var left =  (!PreferencesOptions.AutoPlay ? controls.LEFT : false);
-		var leftR = (!PreferencesOptions.AutoPlay ? controls.LEFT_R : false);
+		var pressArray:Array<Bool> = [
+			!PreferencesOptions.AutoPlay ? controls.LEFT_P : false, 
+			!PreferencesOptions.AutoPlay ? controls.DOWN_P : false, 
+			!PreferencesOptions.AutoPlay ? controls.UP_P : false, 
+			!PreferencesOptions.AutoPlay ? controls.RIGHT_P : false
+		];
+		var releaseArray:Array<Bool> = [
+			!PreferencesOptions.AutoPlay ? controls.LEFT_R : false, 
+			!PreferencesOptions.AutoPlay ? controls.DOWN_R : false, 
+			!PreferencesOptions.AutoPlay ? controls.UP_R : false, 
+			!PreferencesOptions.AutoPlay ? controls.RIGHT_R : false
+		];
 
-		var downR = (!PreferencesOptions.AutoPlay ? controls.DOWN_R : false);
-		var down =  (!PreferencesOptions.AutoPlay ? controls.DOWN : false);
-		var downP = (!PreferencesOptions.AutoPlay ? controls.DOWN_P : false);
-
-		var controlArray:Array<Bool> = [leftP, downP, upP, rightP];
-
-		if ((upP || rightP || downP || leftP) && !boyfriend.stunned && generatedMusic)
+		// Prevent player input if botplay is on
+		if(PreferencesOptions.AutoPlay)
+		{
+			holdArray = [false, false, false, false];
+			pressArray = [false, false, false, false];
+			releaseArray = [false, false, false, false];
+		} 
+		// HOLDS, check for sustain notes
+		if (holdArray.contains(true) && /*!boyfriend.stunned && */ generatedMusic)
+		{
+			notes.forEachAlive(function(daNote:Note)
+			{
+				if (daNote.isSustainNote && daNote.canBeHit && daNote.mustPress && holdArray[daNote.noteData])
+					goodNoteHit(daNote);
+			});
+		}
+ 
+		// PRESSES, check for note hits
+		if (pressArray.contains(true) && /*!boyfriend.stunned && */ generatedMusic)
 		{
 			boyfriend.holdTimer = 0;
-
-			var possibleNotes:Array<Note> = [];
-
-			var ignoreList:Array<Int> = [];
-
+ 
+			var possibleNotes:Array<Note> = []; // notes that can be hit
+			var directionList:Array<Int> = []; // directions that can be hit
+			var dumbNotes:Array<Note> = []; // notes to kill later
+			var directionsAccounted:Array<Bool> = [false,false,false,false]; // we don't want to do judgments for more than one presses
+			
 			notes.forEachAlive(function(daNote:Note)
 			{
 				if (daNote.canBeHit && daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit)
 				{
-					// the sorting probably doesn't need to be in here? who cares lol
-					possibleNotes.push(daNote);
-					possibleNotes.sort((a, b) -> Std.int(a.strumTime - b.strumTime));
-
-					ignoreList.push(daNote.noteData);
-				}
-			});
-
-			if (possibleNotes.length > 0)
-			{
-				var daNote = possibleNotes[0];
-
-				if (perfectMode)
-					noteCheck(true, daNote);
-
-				// Jump notes
-				if (possibleNotes.length >= 2)
-				{
-					if (possibleNotes[0].strumTime == possibleNotes[1].strumTime)
+					if (!directionsAccounted[daNote.noteData])
 					{
-						for (coolNote in possibleNotes)
+						if (directionList.contains(daNote.noteData))
 						{
-							if (controlArray[coolNote.noteData])
-								goodNoteHit(coolNote);
-							else
+							directionsAccounted[daNote.noteData] = true;
+							for (coolNote in possibleNotes)
 							{
-								var inIgnoreList:Bool = false;
-								for (shit in 0...ignoreList.length)
-								{
-									if (controlArray[ignoreList[shit]])
-										inIgnoreList = true;
+								if (coolNote.noteData == daNote.noteData && Math.abs(daNote.strumTime - coolNote.strumTime) < 10)
+								{ // if it's the same note twice at < 10ms distance, just delete it
+									// EXCEPT u cant delete it in this loop cuz it fucks with the collection lol
+									dumbNotes.push(daNote);
+									break;
 								}
-								if (!inIgnoreList)
-									(!PreferencesOptions.GhostTapping ? badNoteCheck() : '');
+								else if (coolNote.noteData == daNote.noteData && daNote.strumTime < coolNote.strumTime)
+								{ // if daNote is earlier than existing note (coolNote), replace
+									possibleNotes.remove(coolNote);
+									possibleNotes.push(daNote);
+									break;
+								}
 							}
 						}
-					}
-					else if (possibleNotes[0].noteData == possibleNotes[1].noteData)
-					{
-						noteCheck(controlArray[daNote.noteData], daNote);
-					}
-					else
-					{
-						for (coolNote in possibleNotes)
+						else
 						{
-							noteCheck(controlArray[coolNote.noteData], coolNote);
+							possibleNotes.push(daNote);
+							directionList.push(daNote.noteData);
 						}
-					}
-				}
-				else // regular notes?
-				{
-					noteCheck(controlArray[daNote.noteData], daNote);
-				}
-				/* 
-					if (controlArray[daNote.noteData])
-						goodNoteHit(daNote);
-				 */
-				// trace(daNote.noteData);
-				/* 
-						switch (daNote.noteData)
-						{
-							case 2: // NOTES YOU JUST PRESSED
-								if (upP || rightP || downP || leftP)
-									noteCheck(upP, daNote);
-							case 3:
-								if (upP || rightP || downP || leftP)
-									noteCheck(rightP, daNote);
-							case 1:
-								if (upP || rightP || downP || leftP)
-									noteCheck(downP, daNote);
-							case 0:
-								if (upP || rightP || downP || leftP)
-									noteCheck(leftP, daNote);
-						}
-
-					//this is already done in noteCheck / goodNoteHit
-					if (daNote.wasGoodHit)
-					{
-						daNote.kill();
-						notes.remove(daNote, true);
-						daNote.destroy();
-					}
-				 */
-			}
-			else
-			{
-				(!PreferencesOptions.GhostTapping ? badNoteCheck() : '');
-			}
-		}
-
-		if ((up || right || down || left) && !boyfriend.stunned && generatedMusic)
-		{
-			notes.forEachAlive(function(daNote:Note)
-			{
-				if (daNote.canBeHit && daNote.mustPress && daNote.isSustainNote)
-				{
-					switch (daNote.noteData)
-					{
-						// NOTES YOU ARE HOLDING
-						case 0:
-							if (left)
-								goodNoteHit(daNote);
-						case 1:
-							if (down)
-								goodNoteHit(daNote);
-						case 2:
-							if (up)
-								goodNoteHit(daNote);
-						case 3:
-							if (right)
-								goodNoteHit(daNote);
 					}
 				}
 			});
+
+			trace('\nCURRENT LINE:\n' + directionsAccounted);
+ 
+			for (note in dumbNotes)
+			{
+				FlxG.log.add("killing dumb ass note at " + note.strumTime);
+				note.kill();
+				notes.remove(note, true);
+				note.destroy();
+			}
+ 
+			possibleNotes.sort((a, b) -> Std.int(a.strumTime - b.strumTime));
+ 
+			var dontCheck = false;
+
+			for (i in 0...pressArray.length)
+			{
+				if (pressArray[i] && !directionList.contains(i))
+					dontCheck = true;
+			}
+
+			if (perfectMode)
+				goodNoteHit(possibleNotes[0]);
+			else if (possibleNotes.length > 0 && !dontCheck)
+			{
+				if (!PreferencesOptions.GhostTapping)
+				{
+					for (shit in 0...pressArray.length)
+						{ // if a direction is hit that shouldn't be
+							if (pressArray[shit] && !directionList.contains(shit))
+								noteMiss(shit, null);
+						}
+				}
+				for (coolNote in possibleNotes)
+				{
+					if (pressArray[coolNote.noteData])
+					{
+						if (mashViolations != 0)
+							mashViolations--;
+						goodNoteHit(coolNote);
+					}
+				}
+			}
+			else if (!PreferencesOptions.GhostTapping)
+				{
+					for (shit in 0...pressArray.length)
+						if (pressArray[shit])
+							noteMiss(shit, null);
+				}
+
+			if(dontCheck && possibleNotes.length > 0 && PreferencesOptions.GhostTapping && !PreferencesOptions.AutoPlay)
+			{
+				if (mashViolations > 8)
+				{
+					trace('mash violations ' + mashViolations);
+					noteMiss(0,null);
+				}
+				else
+					mashViolations++;
+			}
+
 		}
-
+		
 		notes.forEachAlive(function(daNote:Note)
-            {
-                if(PreferencesOptions.DownScroll && daNote.y > strumLine.y ||
-                !PreferencesOptions.DownScroll && daNote.y < strumLine.y)
-                {
+		{
+			if(PreferencesOptions.DownScroll && daNote.y > strumLine.y ||
+			!PreferencesOptions.DownScroll && daNote.y < strumLine.y)
+			{
+				// Force good note hit regardless if it's too late to hit it or not as a fail safe
+				if(PreferencesOptions.AutoPlay && daNote.canBeHit && daNote.mustPress ||
+					PreferencesOptions.AutoPlay && daNote.tooLate && daNote.mustPress)
+				{
+						goodNoteHit(daNote);
+						boyfriend.holdTimer = daNote.sustainLength;
 
-                    if(PreferencesOptions.AutoPlay && daNote.canBeHit && daNote.mustPress ||
-                        PreferencesOptions.AutoPlay && daNote.tooLate && daNote.mustPress)
-                    {
+						playerStrums.forEach(function(spr:StaticStrums)
+						{
+						   spr.playConfirmData(false);
+						});
+				}
+			}
+		});
 
-                            goodNoteHit(daNote);
-                            boyfriend.holdTimer = daNote.sustainLength;
-                playerStrums.forEach(function(spr:FlxSprite)
-                    {
-                        if (Math.abs(daNote.noteData) == spr.ID)
-                            {
-                                spr.animation.play('confirm', true);
-                            }
-                            if (spr.animation.curAnim.name == 'confirm' && !curStage.startsWith('school'))
-                            {
-                                spr.centerOffsets();
-                                spr.offset.x -= 13;
-                                spr.offset.y -= 13;
-                            }
-                            else
-                                spr.centerOffsets();
-                        if (spr.animation.finished)
-                            {
-                                spr.animation.play('static');
-                                spr.centerOffsets();
-                            }
-                    });
-                }
-                }
-            });
-            playerStrums.forEach(function(spr:FlxSprite)
-                {
-                  if (PreferencesOptions.AutoPlay)
-                    {
-                    if (spr.animation.finished)
-                        {
-                            spr.animation.play('static');
-                            spr.centerOffsets();
-                        }
-                    }
-                });
-		if (boyfriend.holdTimer > Conductor.stepCrochet * 4 * 0.001 && !up && !down && !right && !left)
+	if (PreferencesOptions.AutoPlay){
+		playerStrums.forEach(function(spr:StaticStrums)
+		{
+			spr.playConfirmData(true);
+		});
+	}
+
+		if (boyfriend.holdTimer > Conductor.stepCrochet * 4 * 0.001 && (!holdArray.contains(true) || PreferencesOptions.AutoPlay))
 		{
 			if (boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss'))
-			{
-				boyfriend.playAnim('idle');
-			}
+				boyfriend.dance();
+				// camX = 0;
+				// camY = 0;
 		}
-
-		playerStrums.forEach(function(spr:FlxSprite)
+ 
+		playerStrums.forEach(function(spr:StaticStrums)
 		{
-			switch (spr.ID)
-			{
-				case 0:
-					if (leftP && spr.animation.curAnim.name != 'confirm')
-					if (start == false || PreferencesOptions.AutoPlay)
-					spr.animation.play('static');
-					else
-					spr.animation.play('pressed');
-					if (leftR)
-						spr.animation.play('static');
-				case 1:
-					if (downP && spr.animation.curAnim.name != 'confirm')
-						if (start == false || PreferencesOptions.AutoPlay)
-							spr.animation.play('static');
-							else
-							spr.animation.play('pressed');
-					if (downR)
-						spr.animation.play('static');
-				case 2:
-					if (upP && spr.animation.curAnim.name != 'confirm')
-						if (start == false || PreferencesOptions.AutoPlay)
-							spr.animation.play('static');
-							else
-							spr.animation.play('pressed');
-					if (upR)
-						spr.animation.play('static');
-				case 3:
-					if (rightP && spr.animation.curAnim.name != 'confirm')
-						if (start == false || PreferencesOptions.AutoPlay)
-							spr.animation.play('static');
-							else
-							spr.animation.play('pressed');
-					if (rightR)
-						spr.animation.play('static');
-			}
-
-			if (spr.animation.curAnim.name == 'confirm' && !curStage.startsWith('school'))
+			if (pressArray[spr.ID] && spr.animation.curAnim.name != 'confirm')
+				spr.playAnim('pressed');
+			if (!holdArray[spr.ID])
+				spr.playAnim('static');
+ 
+			if (spr.animation.curAnim.name == 'confirm' && !isPixelStage)
 			{
 				spr.centerOffsets();
 				spr.offset.x -= 13;
@@ -2465,48 +2412,45 @@ rating.cameras = [camHUD];
 			else
 				spr.centerOffsets();
 		});
-	}
+	} // stop
 
-	function noteMiss(direction:Int = 1):Void
+	function noteMiss(direction:Int = 1,  ?daNote:Note):Void
 	{
 		if (!boyfriend.stunned)
-		{
-			health -= 0.04;
-			comboPercentaje = 0;
-			combo = 0;
-			missesCounter += 1;
-			if (comboPercentaje > 5 && gf.animOffsets.exists('sad'))
 			{
-				gf.playAnim('sad');
+				vocals.volume = 0;
+				if (combo > 5 && gf.animOffsets.exists('sad'))
+				{
+					gf.playAnim('sad');
+				}
+				combo = 0; 
+	
+				if (combo == 0){
+					combo -= 1;
+				}
+	
+				songScore -= 10;
+				
+				FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
+				// FlxG.sound.play(Paths.sound('missnote1'), 1, false);
+				// FlxG.log.add('played imss note');
+	
+				boyfriend.stunned = true;
+	
+				// get stunned for 5 seconds
+				new FlxTimer().start(5 / 60, function(tmr:FlxTimer)
+				{
+					boyfriend.stunned = false;
+				});
+	
+					boyfriend.playAnim('sing' + StaticStrums.directionsPrefix[direction] + 'miss', true);
+					// case 1:
+					// 	boyfriend.playAnim('singDOWNmiss', true);
+					// case 2:
+					// 	boyfriend.playAnim('singUPmiss', true);
+					// case 3:
+					// 	boyfriend.playAnim('singRIGHTmiss', true);
 			}
-			
-
-			songScore -= 10;
-
-			FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
-			// FlxG.sound.play(Paths.sound('missnote1'), 1, false);
-			// FlxG.log.add('played imss note');
-
-			boyfriend.stunned = true;
-
-			// get stunned for 5 seconds
-			new FlxTimer().start(5 / 60, function(tmr:FlxTimer)
-			{
-				boyfriend.stunned = false;
-			});
-
-			switch (direction)
-			{
-				case 0:
-					boyfriend.playAnim('singLEFTmiss', true);
-				case 1:
-					boyfriend.playAnim('singDOWNmiss', true);
-				case 2:
-					boyfriend.playAnim('singUPmiss', true);
-				case 3:
-					boyfriend.playAnim('singRIGHTmiss', true);
-			}
-		}
 	}
 
 	function badNoteCheck()
