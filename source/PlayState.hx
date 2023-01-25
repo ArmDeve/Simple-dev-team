@@ -872,7 +872,6 @@ add(gf);
 hudGroup.add(healthBarBG);
 hudGroup.add(healthBar);
 
-
 hudGroup.add(iconP2);
 hudGroup.add(iconP1);
 

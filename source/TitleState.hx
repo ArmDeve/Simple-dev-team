@@ -39,7 +39,7 @@ using StringTools;
 class TitleState extends MusicBeatState
 {
 	static var initialized:Bool = false;
-
+    var isFlashing:Bool = true;
 	var blackScreen:FlxSprite;
 	var credGroup:FlxGroup;
 	var textGroup:FlxGroup;
@@ -332,6 +332,7 @@ coolText.screenCenter(X);
 
 	function deleteCoolText()
 	{
+		if (isFlashing)
 		FlxG.camera.flash(FlxColor.WHITE, 0.5);
 
 		while (textGroup.members.length > 0)
@@ -471,7 +472,7 @@ coolText.screenCenter(X);
 		if (!skippedIntro)
 		{
 			remove(ngSpr);
-
+			isFlashing = false;
 			FlxG.camera.flash(FlxColor.WHITE, 4);
 			remove(credGroup);
 			skippedIntro = true;
