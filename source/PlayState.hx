@@ -52,6 +52,7 @@ class PlayState extends MusicBeatState
 	public static var isStoryMode:Bool = false;
 	public static var storyWeek:Int = 0;
 	public static var storyPlaylist:Array<String> = [];
+	public static var isPixelStage:Bool = false;
 	public static var storyDifficulty:Int = 1;
 	var boxUp:FlxSprite;
 	var boxDown:FlxSprite;
@@ -107,6 +108,9 @@ class PlayState extends MusicBeatState
 	private var healthBarBG:FlxSprite;
 	private var healthBar:FlxBar;
 
+	public var timeBarBG:FlxSprite;
+	public var timeBar:FlxBar;
+
 	private var generatedMusic:Bool = false;
 	private var startingSong:Bool = false;
 
@@ -140,7 +144,6 @@ class PlayState extends MusicBeatState
 	var bgGirls:BackgroundGirls;
 
 	var comboPercentaje:Int = 0;
-public static var isPixelStage:Bool = false;
 	var talking:Bool = true;
 	var missesCounter:Int = 0;
 	var goodHitsCounter:Int = 0;
@@ -451,7 +454,7 @@ public static var isPixelStage:Bool = false;
 		          case 'senpai' | 'roses':
 		          {
 		                  curStage = 'school';
-
+						  isPixelStage = true;
 		                  // defaultCamZoom = 0.9;
 
 		                  var bgSky = new FlxSprite().loadGraphic(Paths.image('weeb/weebSky'));
@@ -524,6 +527,7 @@ public static var isPixelStage:Bool = false;
 		          case 'thorns':
 		          {
 		                  curStage = 'schoolEvil';
+						  isPixelStage = true;
 
 		                  var posX = 400;
 	                          var posY = 250;
@@ -728,6 +732,8 @@ add(gf);
 
 		FlxG.fixedTimestep = false;
 
+		// timeBar
+
 		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Paths.image('healthBar'));
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
@@ -751,28 +757,31 @@ add(gf);
 		scoreTxt = new FlxText(healthBarBG.x + healthBarBG.width - 190, healthBarBG.y + 30, 0, "", 20);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		scoreTxt.scrollFactor.set();
-		scoreTxt.borderSize = 1.8;
+		scoreTxt.borderSize = 1.92;
+		scoreTxt.alpha = 0.87;
+		scoreTxt.color = dad.iconColor;
 
 		healthTxt = new FlxText(healthBarBG.x, healthBarBG.y - 5, 0, '', 24);
 		healthTxt.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		healthTxt.scrollFactor.set();
 		healthTxt.borderSize = 2.6;
+		healthTxt.alpha = 0.6;
 
 		musicTimeInfo = new FlxText(0, 0, 0, '', 26);
 		musicTimeInfo.setFormat(Paths.font("vcr.ttf"), 26, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		musicTimeInfo.scrollFactor.set();
 		musicTimeInfo.borderSize = 2;
 		musicTimeInfo.alpha = 0;
-		musicTimeInfo.y = 10;
-		if (PreferencesOptions.DownScroll)
-		musicTimeInfo.y = FlxG.height - 35;
+		musicTimeInfo.y = timeBar.y - (musicTimeInfo.height / 2) +15;
+		// if (PreferencesOptions.DownScroll)
+		// musicTimeInfo.y = FlxG.height - 35;
 
 		FlxTween.tween(musicTimeInfo, {alpha: 1},2 ,{ease: FlxEase.circOut, startDelay: 2.5});
 		
 		var pixelShitPart1:String = "";
 		var pixelShitPart2:String = '';
 
-		if (curStage.startsWith('school'))
+		if (isPixelStage)
 		{
 			pixelShitPart1 = 'weeb/pixelUI/';
 			pixelShitPart2 = '-pixel';
@@ -838,10 +847,12 @@ add(gf);
 			{
 				scoreTxt.visible = false;
 				musicTimeInfo.visible = false;
-			hudGroup.visible = false;
+				hudGroup.visible = false;
 			}
 hudGroup.add(healthBarBG);
 hudGroup.add(healthBar);
+hudGroup.add(timeBarBG);
+hudGroup.add(timeBar);
 
 hudGroup.add(iconP2);
 hudGroup.add(iconP1);
@@ -1007,7 +1018,7 @@ add(musicTimeInfo);
 					var ready:FlxSprite = new FlxSprite().loadGraphic(Paths.image(introAlts[0]));
 					ready.scrollFactor.set();
 
-					if (curStage.startsWith('school'))
+					if (isPixelStage)
 						ready.setGraphicSize(Std.int(ready.width * daPixelZoom));
 
 					ready.screenCenter();
@@ -1026,7 +1037,7 @@ add(musicTimeInfo);
 					var set:FlxSprite = new FlxSprite().loadGraphic(Paths.image(introAlts[1]));
 					set.scrollFactor.set();
 
-					if (curStage.startsWith('school'))
+					if (isPixelStage)
 						set.setGraphicSize(Std.int(set.width * daPixelZoom));
 
 					set.screenCenter();
@@ -1046,7 +1057,7 @@ add(musicTimeInfo);
 					var go:FlxSprite = new FlxSprite().loadGraphic(Paths.image(introAlts[2]));
 					go.scrollFactor.set();
 
-					if (curStage.startsWith('school'))
+					if (isPixelStage)
 						go.setGraphicSize(Std.int(go.width * daPixelZoom));
 
 					go.updateHitbox();
@@ -1096,10 +1107,27 @@ add(musicTimeInfo);
 		FlxG.sound.music.onComplete = endSong;
 		vocals.play();
 
-		#if desktop
 		// Song duration in a float, useful for the time left feature
 		songLength = FlxG.sound.music.length;
 
+		timeBarBG = new FlxSprite(0, FlxG.height - 10).loadGraphic(Paths.image('healthBar'));
+		timeBarBG.screenCenter(X);
+		timeBarBG.scrollFactor.set();
+		timeBarBG.scale.set(2.2, 1);
+		// timeBarBG.updateHitbox();
+		timeBarBG.cameras = [camHUD];
+
+		// if (PreferencesOptions.DownScroll)
+		// 	timeBarBG.y = 50;
+
+		timeBar = new FlxBar(timeBarBG.x + 4, timeBarBG.y + 4, RIGHT_TO_LEFT, Std.int(timeBarBG.width - 2), Std.int(timeBarBG.height - 8), this,
+			'musicTime', 0, songLength - 1000);
+		timeBar.scrollFactor.set();
+		timeBar.numDivisions = 1000; //How much lag this causes?? Should i tone it down to idk, 400 or 200?
+		timeBar.createFilledBar(dad.iconColor, FlxColor.BLACK);
+		timeBar.cameras = [camHUD];
+
+		#if desktop
 		// Updating Discord Rich Presence (with Time Left)
 		DiscordClient.changePresence(detailsText + ' ' + SONG.song + " (" + storyDifficultyText + ') ', '', iconRPC, true, songLength);
 		#end
@@ -1179,8 +1207,8 @@ add(musicTimeInfo);
 						unspawnNotes.push(sustainNote);
 	
 							sustainNote.x = swagNote.x + 36;
-if (curStage.startsWith('school'))
-	sustainNote.x = swagNote.x + 33;
+						if (isPixelStage)
+							sustainNote.x = swagNote.x + 33;
 	
 						sustainNote.mustPress = gottaHitNote;
 	
@@ -1239,10 +1267,10 @@ if (curStage.startsWith('school'))
 				babyArrow.y += 150;
 				babyArrow.alpha = 0;
 
-				if (curStage.startsWith('school'))
+				if (isPixelStage)
 					{
 					FlxTween.tween(babyArrow, {y: babyArrow.y - 150, alpha: 0.85, 'scale.x': 6, 'scale.y': 6}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.3 * i)});
-					babyArrow.scale.set(1.4, 1.4);
+					babyArrow.scale.set(3.4, 3.4);
 				}
 			else
 				{
@@ -1260,8 +1288,10 @@ if (curStage.startsWith('school'))
 			{
 				enemyStrums.add(babyArrow);
 
-				if (PreferencesOptions.MiddleScroll)
-					babyArrow.x -= 999;
+				if (PreferencesOptions.MiddleScroll){
+					babyArrow.scale.set(0.5, 0.5);
+					babyArrow.alpha = 0.5;
+				}
 			}
 
 			enemyStrums.forEach(function(spr:StaticStrums)
@@ -1387,7 +1417,7 @@ if (curStage.startsWith('school'))
                 if (secondsTotal < 0)
                     secondsTotal = 0;
 
-                musicTimeInfo.text = FlxStringUtil.formatTime(secondsTotal, false);
+                musicTimeInfo.text = "- [" + FlxStringUtil.formatTime(secondsTotal, false) + "] -";
 				musicTimeInfo.screenCenter(X);
 
 		if (PreferencesOptions.AutoPlay)
@@ -1414,7 +1444,7 @@ if (curStage.startsWith('school'))
 
 		super.update(elapsed);
 
-		if (curStage.startsWith('school'))
+		if (isPixelStage)
 			{
 				dad.antialiasing = false;
 				boyfriend.antialiasing = false;
@@ -1424,7 +1454,7 @@ if (curStage.startsWith('school'))
 		healthTxt.text = '${healthBar.percent}%';
 		healthTxt.screenCenter(X);
 
-		scoreTxt.text = 'Score: ${songScore} | Combo: ${comboPercentaje}% | Misses: ${missesCounter} | GoodHits: ${goodHitsCounter} | Rating: ${rating}';
+		scoreTxt.text = 'Score: ${songScore} - Combo: ${comboPercentaje}% - Misses: ${missesCounter} | GoodHits: ${goodHitsCounter} - Rating: ${rating}';
 		if (PreferencesOptions.AutoPlay)
 			scoreTxt.text = '[AUTO-PLAY]';
 		scoreTxt.screenCenter(X);
@@ -1481,7 +1511,7 @@ if (curStage.startsWith('school'))
 
 		if (PreferencesOptions.AutoPlay && FlxG.keys.justPressed.ONE)
 			{
-hudGroup.visible = !hudGroup.visible;
+			  hudGroup.visible = !hudGroup.visible;
 			}
 
 		// FlxG.watch.addQuick('VOL', vocals.amplitudeLeft);
@@ -1668,7 +1698,7 @@ hudGroup.visible = !hudGroup.visible;
 		// CHEAT = brandon's a pussy
 		if (controls.CHEAT)
 		{
-			health += 1;
+			interpolateHealth(1);
 			trace("User is cheating!");
 		}
 
@@ -1760,23 +1790,23 @@ hudGroup.visible = !hudGroup.visible;
 
 					if (SONG.enemyDrainsHealth == true)
 						{
-					if (Math.abs(daNote.noteData) < 4)
-						{
-if (health >= 0.15)
-	health = health - 0.023;
-						}
+						if (Math.abs(daNote.noteData) < 4)
+							{
+								if (health >= 0.15)
+									interpolateHealth(-0.023);
+							}
 					}
 
-					enemyStrums.forEach(function(spr:FlxSprite)
+					enemyStrums.forEach(function(spr:StaticStrums)
 						{
 							if (Math.abs(daNote.noteData)== spr.ID)
 								{
-									spr.animation.play('confirm', true);
+									spr.playAnim('confirm', true);
 
 
 									spr.centerOffsets();
 
-									if (!curStage.startsWith('school'))
+									if (!isPixelStage)
 										{
 											spr.offset.x -= 13;
 											spr.offset.y -= 13;
@@ -1809,7 +1839,7 @@ if (health >= 0.15)
 					}
 					else if (!daNote.isSustainNote)
 					{
-						health -= 0.023;
+						interpolateHealth(-0.023);
 						missesCounter += 1;
 						vocals.volume = 0;
 						comboPercentaje = 0;
@@ -1847,8 +1877,10 @@ if (health >= 0.15)
 				}
 			});
 
-		if (!inCutscene)
+		if (!inCutscene){
+		 if (!PreferencesOptions.AutoPlay)	
 			keyShit();
+		}
 
 		#if debug
 		if (FlxG.keys.justPressed.ONE)
@@ -2008,7 +2040,7 @@ if (health >= 0.15)
 		var pixelShitPart1:String = "";
 		var pixelShitPart2:String = '';
 
-		if (curStage.startsWith('school'))
+		if (isPixelStage)
 		{
 			pixelShitPart1 = 'weeb/pixelUI/';
 			pixelShitPart2 = '-pixel';
@@ -2040,7 +2072,7 @@ if (health >= 0.15)
 		comboSpr.velocity.x += FlxG.random.int(1, 10);
 		add(rating);
 
-		if (!curStage.startsWith('school'))
+		if (!isPixelStage)
 		{
 			rating.setGraphicSize(Std.int(rating.width * 0.7));
 			rating.antialiasing = PreferencesOptions.Antialiasing;
@@ -2068,18 +2100,18 @@ if (health >= 0.15)
 			var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'num' + Std.int(i) + pixelShitPart2));
 			numScore.screenCenter();
 			numScore.x = comboSpr.x + (43 * daLoop) - 81;
-			if (curStage.startsWith('school'))
+			if (isPixelStage)
 				{
 					numScore.x = comboSpr.x + (43 * daLoop) - 101;
 				}
 
 			numScore.y += FlxG.save.data.changedHitcomboY - 297;
-			if (curStage.startsWith('school'))
+			if (isPixelStage)
 				{
 					numScore.y -= 60;
 				}
 
-			if (!curStage.startsWith('school'))
+			if (!isPixelStage)
 			{
 				numScore.antialiasing = PreferencesOptions.Antialiasing;
 				numScore.setGraphicSize(Std.int(numScore.width * 0.5));
@@ -2148,24 +2180,18 @@ rating.cameras = [camHUD];
 	var mashViolations:Int = 0;
 	private function keyShit():Void
 	{
-		var holdArray:Array<Bool> = [
-			!PreferencesOptions.AutoPlay ? controls.LEFT : false, 
-			!PreferencesOptions.AutoPlay ? controls.DOWN : false, 
-			!PreferencesOptions.AutoPlay ? controls.UP : false, 
-			!PreferencesOptions.AutoPlay ? controls.RIGHT : false
-		];
-
+		var holdArray:Array<Bool> = [controls.LEFT, controls.DOWN, controls.UP, controls.RIGHT];
 		var pressArray:Array<Bool> = [
-			!PreferencesOptions.AutoPlay ? controls.LEFT_P : false, 
-			!PreferencesOptions.AutoPlay ? controls.DOWN_P : false, 
-			!PreferencesOptions.AutoPlay ? controls.UP_P : false, 
-			!PreferencesOptions.AutoPlay ? controls.RIGHT_P : false
+			controls.LEFT_P,
+			controls.DOWN_P,
+			controls.UP_P,
+			controls.RIGHT_P
 		];
 		var releaseArray:Array<Bool> = [
-			!PreferencesOptions.AutoPlay ? controls.LEFT_R : false, 
-			!PreferencesOptions.AutoPlay ? controls.DOWN_R : false, 
-			!PreferencesOptions.AutoPlay ? controls.UP_R : false, 
-			!PreferencesOptions.AutoPlay ? controls.RIGHT_R : false
+			controls.LEFT_R,
+			controls.DOWN_R,
+			controls.UP_R,
+			controls.RIGHT_R
 		];
 
 		// Prevent player input if botplay is on
@@ -2253,7 +2279,7 @@ rating.cameras = [camHUD];
 				goodNoteHit(possibleNotes[0]);
 			else if (possibleNotes.length > 0 && !dontCheck)
 			{
-				if (!PreferencesOptions.GhostTapping)
+				if (!PreferencesOptions.AutoPlay)
 				{
 					for (shit in 0...pressArray.length)
 						{ // if a direction is hit that shouldn't be
@@ -2267,6 +2293,7 @@ rating.cameras = [camHUD];
 					{
 						if (mashViolations != 0)
 							mashViolations--;
+						scoreTxt.color = dad.iconColor;
 						goodNoteHit(coolNote);
 					}
 				}
@@ -2283,6 +2310,7 @@ rating.cameras = [camHUD];
 				if (mashViolations > 8)
 				{
 					trace('mash violations ' + mashViolations);
+					scoreTxt.color = FlxColor.RED;
 					noteMiss(0,null);
 				}
 				else
@@ -2382,7 +2410,7 @@ rating.cameras = [camHUD];
 					// 	boyfriend.playAnim('singRIGHTmiss', true);
 			}
 	}
-
+/*
 	function badNoteCheck()
 	{
 		// just double pasting this shit cuz fuk u
@@ -2401,17 +2429,44 @@ rating.cameras = [camHUD];
 		if (rightP)
 			noteMiss(3);
 	}
-
-	function noteCheck(keyP:Bool, note:Note):Void
+*/
+	/*function getKeyPresses(note:Note):Int
 	{
-		if (keyP)
-			goodNoteHit(note);
-		else
-		{
-			(!PreferencesOptions.GhostTapping ? badNoteCheck() : '');
-		}
-	}
+		var possibleNotes:Array<Note> = []; // copypasted [FOR KADE] but you alnotesready know that
 
+		notes.forEachAlive(function(daNote:Note)
+		{
+			if (daNote.canBeHit && daNote.mustPress && !daNote.tooLate)
+			{
+				possibleNotes.push(daNote);
+				possibleNotes.sort((a, b) -> Std.int(a.strumTime - b.strumTime));
+			}
+		});
+		if (possibleNotes.length == 1)
+			return possibleNotes.length + 1;
+		return possibleNotes.length;
+	}
+	
+	
+	var etternaModeScore:Int = 0;
+	function noteCheck(controlArray:Array<Bool>, note:Note):Void // THANKS KADE AGAIN :3
+		{
+			var noteDiff:Float = Math.abs(note.strumTime - Conductor.songPosition);
+
+			note.noteRating = CrystalTools.judgeNote(note, noteDiff);
+
+			if (controlArray[note.noteData])
+			{
+				goodNoteHit(note, (mashing > getKeyPresses(note)));
+			}
+		}
+
+*/
+    function interpolateHealth(ams:Float){
+		FlxTween.num(health, health + ams, 0.1, {ease: FlxEase.cubeInOut}, function(name:Float) {
+			health = name;
+		});
+	}
 	function goodNoteHit(note:Note):Void
 	{
 		if (!note.wasGoodHit)
@@ -2423,9 +2478,9 @@ rating.cameras = [camHUD];
 			}
 
 			if (note.noteData >= 0)
-				health += 0.023;
+				interpolateHealth(0.023);
 			else
-				health += 0.004;
+				interpolateHealth(0.004);
 
 			switch (note.noteData)
 			{
@@ -2439,11 +2494,11 @@ rating.cameras = [camHUD];
 					boyfriend.playAnim('singRIGHT', true);
 			}
 
-			playerStrums.forEach(function(spr:FlxSprite)
+			playerStrums.forEach(function(spr:StaticStrums)
 			{
 				if (Math.abs(note.noteData) == spr.ID)
 				{
-					spr.animation.play('confirm', true);
+					spr.playAnim('confirm');
 				}
 			});
 
