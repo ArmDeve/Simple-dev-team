@@ -21,6 +21,9 @@ import haxe.DynamicAccess;
 
 // completely yoinked from andromeda (thats what you get for stealing my callback inputs you fuckers /j)
 // especial thanks to the best frog in fnf kade
+
+
+// in v5 maybe
 typedef LuaProperty =
 {
 	var defaultValue:Any;
