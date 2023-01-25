@@ -336,6 +336,15 @@ drainHealth.callback = function()
 	
 			gfDropDown.selectedLabel = _song.gfVersion;
 
+		var pixelHUD = new FlxUICheckBox(60, 130, null, null, 'Set Pixel HUD?', 100);
+		pixelHUD.checked = PlayState.isPixelStage;
+		pixelHUD.callback = function()
+		{
+			PlayState.isPixelStage = pixelHUD.checked;
+		};
+	
+		// pixelHUD.selectedLabel = PlayState.isPixelStage;
+
 		var tab_group_song = new FlxUI(null, UI_box);
 		tab_group_song.name = "Song";
 		tab_group_song.add(UI_songTitle);
