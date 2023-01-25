@@ -851,9 +851,6 @@ add(gf);
 			}
 hudGroup.add(healthBarBG);
 hudGroup.add(healthBar);
-hudGroup.add(timeBarBG);
-hudGroup.add(timeBar);
-
 hudGroup.add(iconP2);
 hudGroup.add(iconP1);
 
