@@ -103,6 +103,11 @@ class PlayState extends MusicBeatState
 
 	var doof:DialogueBox;
 
+	/**
+	  * animation data or direction idk
+	**/
+	var singArray:Array<String> = ["singLEFT", "singDOWN", "singUP", "singRIGHT"];
+
 	var healthTxt:FlxText;
 
 	private var healthBarBG:FlxSprite;
@@ -179,6 +184,9 @@ class PlayState extends MusicBeatState
 	var sineInOut(default, null):Null<EaseFunction>;
 
 	var data:Dynamic;
+
+	var bfTrail:FlxSprite;
+	var dadTrail:FlxSprite;
 
 	override public function create()
 	{
@@ -636,7 +644,20 @@ class PlayState extends MusicBeatState
 		boyfriend = new Boyfriend(770, 450, SONG.player1);
 		boyfriend.antialiasing = PreferencesOptions.Antialiasing;
 
-		
+		dadTrail = new FlxSprite();
+		dadTrail.visible = false;
+		dadTrail.antialiasing = true;
+		// dadGhost.scale.copyFrom(dad.scale);
+		dadTrail.updateHitbox();
+		add(dadTrail);
+
+		bfTrail = new FlxSprite();
+		bfTrail.visible = false;
+		bfTrail.antialiasing = true;
+		// bfGhost.scale.copyFrom(boyfriend.scale);
+		bfTrail.updateHitbox();
+		add(bfTrail);
+
 		switch (curStage)
 		{
 			case 'limo':
@@ -676,8 +697,8 @@ add(gf);
 		if (curStage == 'limo')
 			add(limo);
 
-							  add(dad);
-							  add(boyfriend);
+		add(dad);
+		add(boyfriend);
 
 		doof = new DialogueBox(false, dialogue);
 		// doof.x += 70;
@@ -772,7 +793,6 @@ add(gf);
 		musicTimeInfo.scrollFactor.set();
 		musicTimeInfo.borderSize = 2;
 		musicTimeInfo.alpha = 0;
-		musicTimeInfo.y = timeBar.y - (musicTimeInfo.height / 2) +15;
 		// if (PreferencesOptions.DownScroll)
 		// musicTimeInfo.y = FlxG.height - 35;
 
@@ -851,8 +871,7 @@ add(gf);
 			}
 hudGroup.add(healthBarBG);
 hudGroup.add(healthBar);
-hudGroup.add(timeBarBG);
-hudGroup.add(timeBar);
+
 
 hudGroup.add(iconP2);
 hudGroup.add(iconP1);
@@ -1110,7 +1129,7 @@ add(musicTimeInfo);
 		// Song duration in a float, useful for the time left feature
 		songLength = FlxG.sound.music.length;
 
-		timeBarBG = new FlxSprite(0, FlxG.height - 10).loadGraphic(Paths.image('healthBar'));
+		timeBarBG = new FlxSprite(0, FlxG.height - 15).loadGraphic(Paths.image('healthBar'));
 		timeBarBG.screenCenter(X);
 		timeBarBG.scrollFactor.set();
 		timeBarBG.scale.set(2.2, 1);
@@ -1120,12 +1139,15 @@ add(musicTimeInfo);
 		// if (PreferencesOptions.DownScroll)
 		// 	timeBarBG.y = 50;
 
-		timeBar = new FlxBar(timeBarBG.x + 4, timeBarBG.y + 4, RIGHT_TO_LEFT, Std.int(timeBarBG.width - 2), Std.int(timeBarBG.height - 8), this,
+		timeBar = new FlxBar(timeBarBG.x + 4, timeBarBG.y + 4, RIGHT_TO_LEFT, Std.int(timeBarBG.scale.x - 0.8), Std.int(timeBarBG.height - 8), this,
 			'musicTime', 0, songLength - 1000);
 		timeBar.scrollFactor.set();
 		timeBar.numDivisions = 1000; //How much lag this causes?? Should i tone it down to idk, 400 or 200?
 		timeBar.createFilledBar(dad.iconColor, FlxColor.BLACK);
 		timeBar.cameras = [camHUD];
+		hudGroup.add(timeBarBG);
+		hudGroup.add(timeBar);
+		musicTimeInfo.y = timeBar.y - (musicTimeInfo.height / 2) +5;
 
 		#if desktop
 		// Updating Discord Rich Presence (with Time Left)
@@ -1189,6 +1211,17 @@ add(musicTimeInfo);
 					swagNote.sustainLength = songNotes[2];
 					swagNote.scrollFactor.set(0, 0);
 	                swagNote.x += strumLine.x + 45;
+					var myArrosGuddy:Array <Note> = [];
+					var fist = unspawnNotes[0];
+
+					if (fist != null){
+					for (k in unspawnNotes){
+						if (k.strumTime == fist.strumTime) 
+							myArrosGuddy.push(k);
+							var animToPlay = singArray[Std.int(Math.abs(swagNote.noteData))];
+							doTrailGhostAnim("dad", animToPlay);
+						}
+					}
 				
 					if (PreferencesOptions.MiddleScroll)
 						swagNote.x -= 215; 
@@ -2238,6 +2271,20 @@ rating.cameras = [camHUD];
 									dumbNotes.push(daNote);
 									break;
 								}
+								// eeh?, doble note?
+								var myArrosGuddy:Array <Note> = [];
+
+								var fist = possibleNotes[0];
+
+								if (fist != null){
+								for (k in possibleNotes){
+									 if (k.strumTime == fist.strumTime) 
+										myArrosGuddy.push(k);
+										var animToPlay = singArray[Std.int(Math.abs(daNote.noteData))];
+										doTrailGhostAnim("bf", animToPlay);
+									}
+								}
+								
 								else if (coolNote.noteData == daNote.noteData && daNote.strumTime < coolNote.strumTime)
 								{ // if daNote is earlier than existing note (coolNote), replace
 									possibleNotes.remove(coolNote);
@@ -2462,6 +2509,98 @@ rating.cameras = [camHUD];
 		}
 
 */
+	var dadGhostTween:FlxTween;
+	var bfGhostTween:FlxTween;
+    public function doTrailGhostAnim(char:String, animToPlay:String){
+		{
+			var ghost:FlxSprite = dadTrail;
+			var player:Character = dad;
+	
+			switch(char.toLowerCase().trim()){
+				case 'bf' | 'boyfriend' | '0':
+					ghost = bfTrail;
+					player = boyfriend;
+				case 'dad' | 'opponent' | '1':
+					ghost = dadTrail;
+					player = dad;
+				// case 'mom' | 'opponent2' | '3':
+				// 	ghost = momGhost;
+				// 	player = mom;
+			}
+							
+			ghost.frames = player.frames;
+			ghost.animation.copyFrom(player.animation);
+			ghost.x = player.x;
+			ghost.y = player.y;
+			ghost.animation.play(animToPlay, true);
+			ghost.offset.set(player.animOffsets.get(animToPlay)[0], player.animOffsets.get(animToPlay)[1]);
+			ghost.flipX = player.flipX;
+			ghost.flipY = player.flipY;
+			ghost.antialiasing = player.antialiasing;
+			ghost.scale.set(player.scale.x, player.scale.y);
+			ghost.blend = HARDLIGHT;
+			ghost.alpha = 0.8;
+			ghost.visible = true;
+/*
+            huh?
+			switch(curStage.toLowerCase()){
+				case 'who' | 'voting' | 'nuzzus' | 'idk':
+					//erm
+				case 'cargo' | 'finalem':
+					FlxG.camera.zoom += 0.015;
+					camHUD.zoom += 0.015;
+				default:
+					FlxG.camera.zoom += 0.015;
+					camHUD.zoom += 0.03;
+			}
+*/
+	
+			switch (char.toLowerCase().trim())
+			{
+				case 'bf' | 'boyfriend' | '0':
+					if (bfGhostTween != null)
+						bfGhostTween.cancel();
+					ghost.color = boyfriend.iconColor;
+						// FlxTween.tween(bfTrail, {x: bfTrail.x +30}, 0.5, {ease: FlxEase.circInOut, onComplete: function(twn){
+						//    FlxTween.tween(bfTrail, {x: bfTrail.x- 30}, 0.4, {ease: FlxEase.circInOut});
+						// }});
+						bfGhostTween = FlxTween.tween(bfTrail, {alpha: 0}, 0.85, {
+						ease: FlxEase.linear,
+						onComplete: function(twn:FlxTween)
+						{
+							bfGhostTween = null;
+						}
+					});
+	
+				case 'dad' | 'opponent' | '1':
+					if (dadGhostTween != null)
+						dadGhostTween.cancel();
+					ghost.color = dad.iconColor;
+					// FlxTween.tween(dadTrail, {x: dadTrail.x - 30}, 0.5, {ease: FlxEase.circInOut, onComplete: function(twn){
+					// 	FlxTween.tween(dadTrail, {x: dadTrail.x + 30}, 0.4, {ease: FlxEase.circInOut});
+					//  }});
+					dadGhostTween = FlxTween.tween(dadTrail, {alpha: 0}, 0.85, {
+						ease: FlxEase.linear,
+						onComplete: function(twn:FlxTween)
+						{
+							dadGhostTween = null;
+						}
+					});
+				// case 'mom' | 'opponent2' | '3':
+				// 	if (momGhostTween != null)
+				// 		momGhostTween.cancel();
+				// 	ghost.color = FlxColor.fromRGB(mom.healthColorArray[0] + 50, mom.healthColorArray[1] + 50, mom.healthColorArray[2] + 50);
+				// 	momGhostTween = FlxTween.tween(momGhost, {alpha: 0}, 0.75, {
+				// 		ease: FlxEase.linear,
+				// 		onComplete: function(twn:FlxTween)
+				// 		{
+				// 			momGhostTween = null;
+				// 		}
+				// 	});
+			}
+		}
+	}
+
     function interpolateHealth(ams:Float){
 		FlxTween.num(health, health + ams, 0.1, {ease: FlxEase.cubeInOut}, function(name:Float) {
 			health = name;
@@ -2482,17 +2621,9 @@ rating.cameras = [camHUD];
 			else
 				interpolateHealth(0.004);
 
-			switch (note.noteData)
-			{
-				case 0:
-					boyfriend.playAnim('singLEFT', true);
-				case 1:
-					boyfriend.playAnim('singDOWN', true);
-				case 2:
-					boyfriend.playAnim('singUP', true);
-				case 3:
-					boyfriend.playAnim('singRIGHT', true);
-			}
+			var animToPlay = singArray[Std.int(Math.abs(note.noteData))];
+
+			boyfriend.playAnim(animToPlay, true);
 
 			playerStrums.forEach(function(spr:StaticStrums)
 			{
