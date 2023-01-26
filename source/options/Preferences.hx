@@ -58,6 +58,7 @@ controlsStrings = CoolUtil.coolStringFile(
 	"\nHitSound "           + (!PreferencesOptions.HitSound ? "off" : "on") +
 	"\nHitSound Volume"     +
 	"\nHide Hud "           + (!PreferencesOptions.HideHud ? "off" : "on") +
+	"\nTime Bar "           + (!PreferencesOptions.TimeBar ? "off" : "on") +
 	"\nAntialiasing "       + (!PreferencesOptions.Antialiasing ? "off" : "on") +
 	"\nFullscreen "         + (!PreferencesOptions.FullScreen ? "off" : "on") +
 	"\nGameOver Ost "       + (!PreferencesOptions.GameOverOst ? "Funkin" : "S-E")
@@ -70,6 +71,7 @@ descriptions = [
 	'If u hit the notes does Osu sound',
 	'Hit Sound Volume: ${vol}%', // shit in update
 	'Hide hud',
+	'Show or disble time bar',
 	'Sprites Quality',
 	'Activate Full Screen',
 	'Change GameOver Ost'
@@ -140,6 +142,7 @@ descriptions = [
 			desc.text = 'Hit Sound Volume: ${vol}%';
 
 			if (controls.BACK){
+				PreferencesOptions.saveData();
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 				FlxG.save.data.volumeOp = vol;
 				if (!isPauseSubState)
@@ -213,24 +216,30 @@ vol += 10;
 						PreferencesOptions.HideHud = !PreferencesOptions.HideHud;
 						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Hide Hud " + (PreferencesOptions.HideHud ? "off" : "on"), true, false);
 						ctrl.isMenuItem = true;
-						ctrl.targetY = curSelected - 5;
+						ctrl.targetY = curSelected - 6;
 						grpControls.add(ctrl);
 						case 7:
+							PreferencesOptions.HideHud = !PreferencesOptions.HideHud;
+							var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Timbe Bar " + (PreferencesOptions.HideHud ? "off" : "on"), true, false);
+							ctrl.isMenuItem = true;
+							ctrl.targetY = curSelected - 7;
+							grpControls.add(ctrl);
+						case 8:
 							PreferencesOptions.Antialiasing = !PreferencesOptions.Antialiasing;
 							var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Antialiasing " + (PreferencesOptions.Antialiasing ? "off" : "on"), true, false);
 							ctrl.isMenuItem = true;
 							ctrl.targetY = curSelected - 6;
 							grpControls.add(ctrl);
-						case 8:
+						case 9:
 							PreferencesOptions.FullScreen = !PreferencesOptions.FullScreen;
 							var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Fullscreen " + (PreferencesOptions.FullScreen ? "off" : "on"), true, false);
 							ctrl.isMenuItem = true;
 							ctrl.targetY = curSelected - 7;
 							grpControls.add(ctrl);
 							FlxG.fullscreen = PreferencesOptions.FullScreen;
-						case 9:
+						case 10:
 							PreferencesOptions.GameOverOst = !PreferencesOptions.GameOverOst;
-							var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "GameOver Music " + (PreferencesOptions.GameOverOst ? "Funkin" : "S E"), true, false);
+							var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "GameOver Music " + (PreferencesOptions.GameOverOst ? "Funkin" : "S-E"), true, false);
 							ctrl.isMenuItem = true;
 							ctrl.targetY = curSelected - 9;
 							grpControls.add(ctrl);

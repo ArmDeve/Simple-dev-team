@@ -82,8 +82,7 @@ class PlayState extends MusicBeatState
 	public var strumLine:FlxSprite;
 	private var curSection:Int = 0;
 
-	public static var camFollow:FlxObject;
-
+	private var camFollow:FlxObject;
 	private static var prevCamFollow:FlxObject;
 
 	public var strumLineNotes:FlxTypedGroup<FlxSprite>;
@@ -289,7 +288,7 @@ class PlayState extends MusicBeatState
 
 		                  var hallowTex = Paths.getSparrowAtlas('halloween_bg');
 
-	                          halloweenBG = new FlxSprite(-200, -100);
+	                          halloweenBG = new FlxSprite(-200, -85);
 		                  halloweenBG.frames = hallowTex;
 	                          halloweenBG.animation.addByPrefix('idle', 'halloweem bg0');
 	                          halloweenBG.animation.addByPrefix('lightning', 'halloweem bg lightning strike', 24, false);
@@ -734,13 +733,8 @@ add(gf);
 
 		camFollow = new FlxObject(0, 0, 1, 1);
 
-		camFollow.setPosition(camPos.x, camPos.y);
-
-		if (prevCamFollow != null)
-		{
-			camFollow = prevCamFollow;
-			prevCamFollow = null;
-		}
+		if (gf != null)
+camFollow.setPosition(gf.getGraphicMidpoint().x, gf.getGraphicMidpoint().y);
 
 		add(camFollow);
 
@@ -788,7 +782,7 @@ add(gf);
 		healthTxt.borderSize = 2.6;
 		healthTxt.alpha = 0.6;
 
-		musicTimeInfo = new FlxText(0, 0, 0, '', 26);
+		musicTimeInfo = new FlxText(0, 10, 0, '', 26);
 		musicTimeInfo.setFormat(Paths.font("vcr.ttf"), 26, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		musicTimeInfo.scrollFactor.set();
 		musicTimeInfo.borderSize = 2;
@@ -996,7 +990,6 @@ add(musicTimeInfo);
 	function startCountdown():Void
 	{
 		inCutscene = false;
-
 		generateStaticArrows(0);
 		generateStaticArrows(1);
 
@@ -1089,6 +1082,7 @@ add(musicTimeInfo);
 						{
 							go.destroy();
 							gf.dance();
+
 			boyfriend.playAnim('idle');
 		dad.dance();
 			start = true;
@@ -1128,10 +1122,10 @@ add(musicTimeInfo);
 		// Song duration in a float, useful for the time left feature
 		songLength = FlxG.sound.music.length;
 
-		timeBarBG = new FlxSprite(0, FlxG.height - 15).loadGraphic(Paths.image('healthBar'));
+		timeBarBG = new FlxSprite(0, 15).loadGraphic(Paths.image('healthBar'));
 		timeBarBG.screenCenter(X);
 		timeBarBG.scrollFactor.set();
-		timeBarBG.scale.set(2.2, 1);
+		timeBarBG.scale.set(2.2, 1.3);
 		// timeBarBG.updateHitbox();
 		timeBarBG.cameras = [camHUD];
 
@@ -1144,10 +1138,13 @@ add(musicTimeInfo);
 		timeBar.numDivisions = 1000; //How much lag this causes?? Should i tone it down to idk, 400 or 200?
 		timeBar.createFilledBar(dad.iconColor, FlxColor.BLACK);
 		timeBar.cameras = [camHUD];
+
+		if (PreferencesOptions.TimeBar)
+			{
 		hudGroup.add(timeBarBG);
 		hudGroup.add(timeBar);
-		musicTimeInfo.y = timeBar.y - (musicTimeInfo.height / 2) +5;
-
+			}
+			
 		#if desktop
 		// Updating Discord Rich Presence (with Time Left)
 		DiscordClient.changePresence(detailsText + ' ' + SONG.song + " (" + storyDifficultyText + ') ', '', iconRPC, true, songLength);
@@ -1910,7 +1907,6 @@ add(musicTimeInfo);
 			});
 
 		if (!inCutscene){
-		 if (!PreferencesOptions.AutoPlay)	
 			keyShit();
 		}
 
@@ -2379,7 +2375,7 @@ rating.cameras = [camHUD];
 
 						playerStrums.forEach(function(spr:StaticStrums)
 						{
-						   spr.playConfirmData(false);
+						   spr.playConfirmData(true);
 						});
 				}
 			}
