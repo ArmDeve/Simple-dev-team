@@ -1,0 +1,11 @@
+
+{
+    "data": "Simple-Dev-Team",
+    "owner": "AmsDev",
+    "base": "Funkin-Master",
+    "lua": "Kade-Engine",
+
+
+    "repo": "https://github.com/ArmDeve/Simple-dev-team",
+    "version": 5.0
+}
