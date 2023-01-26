@@ -774,7 +774,6 @@ camFollow.setPosition(gf.getGraphicMidpoint().x, gf.getGraphicMidpoint().y);
 		scoreTxt.scrollFactor.set();
 		scoreTxt.borderSize = 1.92;
 		scoreTxt.alpha = 0.87;
-		scoreTxt.color = dad.iconColor;
 
 		healthTxt = new FlxText(healthBarBG.x, healthBarBG.y - 5, 0, '', 24);
 		healthTxt.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -1144,7 +1143,7 @@ add(musicTimeInfo);
 		hudGroup.add(timeBarBG);
 		hudGroup.add(timeBar);
 			}
-			
+
 		#if desktop
 		// Updating Discord Rich Presence (with Time Left)
 		DiscordClient.changePresence(detailsText + ' ' + SONG.song + " (" + storyDifficultyText + ') ', '', iconRPC, true, songLength);
@@ -2335,7 +2334,7 @@ rating.cameras = [camHUD];
 					{
 						if (mashViolations != 0)
 							mashViolations--;
-						scoreTxt.color = dad.iconColor;
+						//scoreTxt.color = dad.iconColor;
 						goodNoteHit(coolNote);
 					}
 				}

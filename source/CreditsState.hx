@@ -267,14 +267,14 @@ class CredsStuff
     'Jarcor',
     'Dead OST Creator',
     'UwU',
-    '#FFFFFF',
+    '#FF4F4F',
     'https://www.youtube.com/@assmanbruh7030'
     ],
     [
     'Qbo',
     'Video Trailer',
     'ANACHEI',
-    '#FFFFFF',
+    '#339999',
     'https://www.youtube.com/@assmanbruh7030'
     ],
 	[

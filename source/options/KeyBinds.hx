@@ -19,11 +19,10 @@ class KeyBinds
 
     public static function resetBinds():Void{
 
-        FlxG.save.data.upBind = "W";
-        FlxG.save.data.downBind = "S";
-        FlxG.save.data.leftBind = "A";
-        FlxG.save.data.rightBind = "D";
-        FlxG.save.data.killBind = "R";
+        FlxG.save.data.upBind = "D";
+        FlxG.save.data.downBind = "F";
+        FlxG.save.data.leftBind = "J";
+        FlxG.save.data.rightBind = "K";
         FlxG.save.data.pauseBind = "ENTER";
         FlxG.save.data.gpupBind = "DPAD_UP";
         FlxG.save.data.gpdownBind = "DPAD_DOWN";
@@ -36,19 +35,19 @@ class KeyBinds
     public static function keyCheck():Void
     {
         if(FlxG.save.data.upBind == null){
-            FlxG.save.data.upBind = "W";
+            FlxG.save.data.upBind = "D";
             trace("No UP");
         }
         if(FlxG.save.data.downBind == null){
-            FlxG.save.data.downBind = "S";
+            FlxG.save.data.downBind = "F";
             trace("No DOWN");
         }
         if(FlxG.save.data.leftBind == null){
-            FlxG.save.data.leftBind = "A";
+            FlxG.save.data.leftBind = "J";
             trace("No LEFT");
         }
         if(FlxG.save.data.rightBind == null){
-            FlxG.save.data.rightBind = "D";
+            FlxG.save.data.rightBind = "K";
             trace("No RIGHT");
         }
         
@@ -67,10 +66,6 @@ class KeyBinds
         if(FlxG.save.data.gprightBind == null){
             FlxG.save.data.gprightBind = "DPAD_RIGHT";
             trace("No GRIGHT");
-        }
-	if(FlxG.save.data.killBind == null){
-            FlxG.save.data.killBind = "R";
-            trace("No KILL");
         }
     if(FlxG.save.data.pauseBind == null){
         FlxG.save.data.pauseBind = "ENTER";
