@@ -3,6 +3,7 @@ package;
 import flixel.util.FlxTimer;
 import Discord.DiscordClient;
 import lime.app.Application;
+import options.PreferencesOptions;
 import flixel.util.FlxColor;
 import flixel.FlxGame;
 import flixel.FlxState;

@@ -13,6 +13,7 @@ class PreferencesOptions//no psych bro -_-
 	public static var HitSound:Bool = false;
 	public static var HitSoundVolume:Float = 0.0;
 	public static var HideHud:Bool = false;
+    public static var Fps:Bool = true;
     public static var TimeBar:Bool = false;
 	public static var FullScreen:Bool = false;
 	public static var Antialiasing:Bool = true;
@@ -26,6 +27,7 @@ class PreferencesOptions//no psych bro -_-
             FlxG.save.data.hitsound       = HitSound;
             FlxG.save.data.autoplay       = AutoPlay;
             FlxG.save.data.hud            = HideHud;
+            FlxG.save.data.showfps        = Fps;
             FlxG.save.data.timebar        = TimeBar;
             FlxG.save.data.fullscreen     = FullScreen;
             FlxG.save.data.gameoverost    = GameOverOst;
@@ -52,6 +54,9 @@ class PreferencesOptions//no psych bro -_-
 
                 if (FlxG.save.data.hud != null)
                     HideHud = FlxG.save.data.hud;
+
+                if (FlxG.save.data.showfps != null)
+                    Fps = FlxG.save.data.showfps;
 
                 if (FlxG.save.data.timebar != null)
                     TimeBar = FlxG.save.data.timebar;

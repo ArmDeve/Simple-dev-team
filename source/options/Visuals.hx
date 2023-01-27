@@ -21,7 +21,7 @@ import flixel.util.FlxColor;
 import lime.utils.Assets;
 import flixel.ui.FlxButton;
 
-class Preferences extends MusicBeatState
+class Visuals extends MusicBeatState
 {
 	var selector:FlxText;
 	var curSelected:Int = 0;
@@ -45,28 +45,24 @@ FlxG.mouse.visible = true;
 
 #if desktop
 		// Updating Discord Rich Presence
-		DiscordClient.changePresence("In the Options Menu(Preferences)", null);
+		DiscordClient.changePresence("In the Options Menu(Visuals)", null);
 		#end
 		
 		var tex = 'menuDesat';
 		menuBG = new FlxSprite().loadGraphic(Paths.image(tex));
 controlsStrings = CoolUtil.coolStringFile(
-	"GhostTapping "   + (!PreferencesOptions.GhostTapping ? "off" : "on") + 
-	"\nMiddleScroll "       + (!PreferencesOptions.MiddleScroll ? 'off' : 'on') + 
-	"\nDownScroll "         + (!PreferencesOptions.DownScroll ? "off" : "on") +
-	"\nAuto Play "          + (!PreferencesOptions.AutoPlay ? "off" : "on") +
-	"\nHitSound "           + (!PreferencesOptions.HitSound ? "off" : "on") +
-	"\nHitSound Volume"     +
-	"\nGameOver Ost "       + (!PreferencesOptions.GameOverOst ? "Funkin" : "S-E")
+	"\nHide Hud "           + (!PreferencesOptions.HideHud ? "off" : "on") +
+	"\nTime Bar "           + (!PreferencesOptions.TimeBar ? "off" : "on") +
+	"\nAntialiasing "       + (!PreferencesOptions.Antialiasing ? "off" : "on") +
+	"\nFullscreen "         + (!PreferencesOptions.FullScreen ? "off" : "on") +
+	"\nFPS "         + (!PreferencesOptions.Fps ? "off" : "on")
 ); 
 descriptions = [
-	"you won't get misses from pressing keys",
-	'your notes get centered',
-	'notes go Down instead of Up',
-	'{BOTPLAY}',
-	'If u hit the notes does Osu sound',
-	'Hit Sound Volume: ${vol}%', // shit in update
-	'Change GameOver Ost'
+	'Show or hide hud',
+	'Show or hide time bar',
+	'Sprites Quality',
+	'Activate Full Screen',
+	'Show or hide FPS'
 ];
 
 
@@ -175,41 +171,37 @@ vol += 10;
 				switch(curSelected)
 				{
 					case 0:
-						PreferencesOptions.GhostTapping = !PreferencesOptions.GhostTapping;
-						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "GhostTapping " + (PreferencesOptions.GhostTapping ? "off" : "on"), true, false);
+						PreferencesOptions.HideHud = !PreferencesOptions.HideHud;
+						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Hide Hud " + (PreferencesOptions.HideHud ? "off" : "on"), true, false);
 						ctrl.isMenuItem = true;
 						ctrl.targetY = curSelected - 0;
 						grpControls.add(ctrl);
-					case 1:
-						PreferencesOptions.MiddleScroll = !PreferencesOptions.MiddleScroll;
-						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "MiddleScroll " + (PreferencesOptions.MiddleScroll ? 'off' : 'on'), true, false);
-						ctrl.isMenuItem = true;
-						ctrl.targetY = curSelected - 1;
-						grpControls.add(ctrl);
-					case 2:
-						PreferencesOptions.DownScroll = !PreferencesOptions.DownScroll;
-						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "DownScroll " + (PreferencesOptions.DownScroll ? "off" : "on"), true, false);
-						ctrl.isMenuItem = true;
-						ctrl.targetY = curSelected - 2;
-						grpControls.add(ctrl);
-					case 3:
-						PreferencesOptions.AutoPlay = !PreferencesOptions.AutoPlay;
-						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Auto Play " + (PreferencesOptions.AutoPlay ? "off" : "on"), true, false);
-						ctrl.isMenuItem = true;
-						ctrl.targetY = curSelected - 3;
-						grpControls.add(ctrl);
+						case 1:
+							PreferencesOptions.HideHud = !PreferencesOptions.HideHud;
+							var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Timbe Bar " + (PreferencesOptions.HideHud ? "off" : "on"), true, false);
+							ctrl.isMenuItem = true;
+							ctrl.targetY = curSelected - 1;
+							grpControls.add(ctrl);
+						case 2:
+							PreferencesOptions.Antialiasing = !PreferencesOptions.Antialiasing;
+							var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Antialiasing " + (PreferencesOptions.Antialiasing ? "off" : "on"), true, false);
+							ctrl.isMenuItem = true;
+							ctrl.targetY = curSelected - 2;
+							grpControls.add(ctrl);
+						case 3:
+							PreferencesOptions.FullScreen = !PreferencesOptions.FullScreen;
+							var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Fullscreen " + (PreferencesOptions.FullScreen ? "off" : "on"), true, false);
+							ctrl.isMenuItem = true;
+							ctrl.targetY = curSelected - 3;
+							grpControls.add(ctrl);
+							FlxG.fullscreen = PreferencesOptions.FullScreen;
 						case 4:
-							PreferencesOptions.HitSound = !PreferencesOptions.HitSound;
-							var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "HitSound " + (PreferencesOptions.HitSound ? "off" : "on"), true, false);
+							PreferencesOptions.Fps = !PreferencesOptions.Fps;
+							var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "FPS " + (PreferencesOptions.Fps ? "off" : "on"), true, false);
 							ctrl.isMenuItem = true;
 							ctrl.targetY = curSelected - 4;
 							grpControls.add(ctrl);
-						case 6:
-							PreferencesOptions.GameOverOst = !PreferencesOptions.GameOverOst;
-							var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "GameOver Music " + (PreferencesOptions.GameOverOst ? "Funkin" : "S-E"), true, false);
-							ctrl.isMenuItem = true;
-							ctrl.targetY = curSelected - 6;
-							grpControls.add(ctrl);
+							Main.toggleMem(PreferencesOptions.Fps);
 				}
 			}
 		FlxG.save.flush();

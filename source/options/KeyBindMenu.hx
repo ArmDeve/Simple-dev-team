@@ -74,7 +74,7 @@ class KeyBindMenu extends FlxSubState
         blackBox = new FlxSprite(0,0).makeGraphic(FlxG.width,FlxG.height,FlxColor.BLACK);
         add(blackBox);
 
-        infoText = new FlxText(keyTextDisplay.x - 470, 380, 1280, '', 72);
+        infoText = new FlxText(keyTextDisplay.x - 470, 480, 1280, '', 72);
 		infoText.scrollFactor.set(0, 0);
 		infoText.setFormat("VCR OSD Mono", 24, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		infoText.borderSize = 3.4;

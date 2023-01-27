@@ -33,7 +33,7 @@ class CreditsState extends MusicBeatState
     {
         super.create();
 
-        Main.toggleMem(false);
+        Main.toggleMem(false); // idk
 
         for (i in 0...CredsStuff.creditsStuff.length)
             {
@@ -136,7 +136,9 @@ class CreditsState extends MusicBeatState
 
                 if (controls.BACK)
                     {
+                        if (PreferencesOptions.Fps)
                         Main.toggleMem(true);
+                        
                        nextState(new MainMenuState());
                     }
     }

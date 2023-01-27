@@ -26,6 +26,7 @@ var grpMenuShit:FlxTypedGroup<Alphabet>;
 	var menuItems:Array<String> = [
 	'KeyBinds', 
 	'Preferences', 
+	'Visuals', 
 	'Offsets',
 	'Reset-Score'
 ];
@@ -45,6 +46,8 @@ switch(label)
 	case 'Preferences':
 		Preferences.isPauseSubState = false;
 	nextState(new options.Preferences());
+	case 'Visuals':
+	nextState(new options.Visuals());
 	case 'Offsets':
 		nextState(new options.OffsetsState());
 	case 'Reset-Score':
