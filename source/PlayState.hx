@@ -1124,6 +1124,7 @@ add(musicTimeInfo);
 		timeBarBG = new FlxSprite(0, 15).loadGraphic(Paths.image('healthBar'));
 		timeBarBG.screenCenter(X);
 		timeBarBG.scrollFactor.set();
+		timeBarBG.alpha = 0;
 		timeBarBG.scale.set(2.2, 1.3);
 		// timeBarBG.updateHitbox();
 		timeBarBG.cameras = [camHUD];
@@ -1131,17 +1132,21 @@ add(musicTimeInfo);
 		// if (PreferencesOptions.DownScroll)
 		// 	timeBarBG.y = 50;
 
-		timeBar = new FlxBar(timeBarBG.x + 4, timeBarBG.y + 4, RIGHT_TO_LEFT, Std.int(timeBarBG.scale.x - 0.8), Std.int(timeBarBG.height - 8), this,
+		timeBar = new FlxBar(timeBarBG.x + 4, timeBarBG.y + 4, RIGHT_TO_LEFT, Std.int(timeBarBG.scale.x - 0.8), Std.int(timeBarBG.height), this,
 			'musicTime', 0, songLength - 1000);
 		timeBar.scrollFactor.set();
+		timeBar.alpha = 0;
 		timeBar.numDivisions = 1000; //How much lag this causes?? Should i tone it down to idk, 400 or 200?
 		timeBar.createFilledBar(dad.iconColor, FlxColor.BLACK);
 		timeBar.cameras = [camHUD];
 
+		FlxTween.tween(timeBar, {alpha: 1},2 ,{ease: FlxEase.circOut, startDelay: 2.5});
+		FlxTween.tween(timeBarBG, {alpha: 1},2 ,{ease: FlxEase.circOut, startDelay: 2.5});
+
 		if (PreferencesOptions.TimeBar)
 			{
-		hudGroup.add(timeBarBG);
 		hudGroup.add(timeBar);
+		hudGroup.add(timeBarBG);
 			}
 
 		#if desktop

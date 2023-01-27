@@ -19,9 +19,9 @@ class KeyBinds
 
     public static function resetBinds():Void{
 
-        FlxG.save.data.upBind = "D";
+        FlxG.save.data.upBind = "J";
         FlxG.save.data.downBind = "F";
-        FlxG.save.data.leftBind = "J";
+        FlxG.save.data.leftBind = "D";
         FlxG.save.data.rightBind = "K";
         FlxG.save.data.pauseBind = "ENTER";
         FlxG.save.data.gpupBind = "DPAD_UP";
@@ -35,7 +35,7 @@ class KeyBinds
     public static function keyCheck():Void
     {
         if(FlxG.save.data.upBind == null){
-            FlxG.save.data.upBind = "D";
+            FlxG.save.data.upBind = "J";
             trace("No UP");
         }
         if(FlxG.save.data.downBind == null){
@@ -43,7 +43,7 @@ class KeyBinds
             trace("No DOWN");
         }
         if(FlxG.save.data.leftBind == null){
-            FlxG.save.data.leftBind = "J";
+            FlxG.save.data.leftBind = "D";
             trace("No LEFT");
         }
         if(FlxG.save.data.rightBind == null){

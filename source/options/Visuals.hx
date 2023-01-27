@@ -38,7 +38,6 @@ class Visuals extends MusicBeatState
 
 	var grpControls:FlxTypedGroup<Alphabet>;
 	var descriptions:Array<String>;
-	var vol:Int = 0;
 	override function create()
 	{
 FlxG.mouse.visible = true;
@@ -103,9 +102,6 @@ descriptions = [
 		desc.borderSize = 2.6;
 		add(desc);
 
-		// FlxG.save.data.volumeOp = vol;
-		vol = FlxG.save.data.volumeOp;
-
 		super.create();
 	}
 
@@ -115,24 +111,9 @@ descriptions = [
 
 		desc.screenCenter(X);
 
-		if (PreferencesOptions.HitSoundVolume > 1)
-			{
-			PreferencesOptions.HitSoundVolume = 1;
-			vol = 100;
-			}
-		if (PreferencesOptions.HitSoundVolume <= 0.0)
-			{
-			PreferencesOptions.HitSoundVolume = 0.0;
-			vol = 0;
-			}
-
-		if (curSelected == 5)
-			desc.text = 'Hit Sound Volume: ${vol}%';
-
 			if (controls.BACK){
 				PreferencesOptions.saveData();
 				FlxG.sound.play(Paths.sound('cancelMenu'));
-				FlxG.save.data.volumeOp = vol;
 				if (!isPauseSubState)
 					{
 				nextState(new OptionsMenu());
@@ -144,18 +125,6 @@ descriptions = [
 			}
 		}
 
-if (curSelected == 5 && controls.LEFT_P)
-	{
-	PreferencesOptions.HitSoundVolume -= 0.1;
-vol -= 10;
-FlxG.save.data.volumeOp = vol;
-	}
-if (curSelected == 5 && controls.RIGHT_P)
-	{
-	PreferencesOptions.HitSoundVolume += 0.1;
-	FlxG.save.data.volumeOp = vol;
-vol += 10;
-	}
 			if (controls.UP_P)
 				changeSelection(-1);
 			if (controls.DOWN_P)
@@ -163,7 +132,6 @@ vol += 10;
 
 			if (controls.ACCEPT)
 			{
-				FlxG.save.data.volumeOp = vol;
 				PreferencesOptions.saveData();
 				FlxG.resetState();
 				if (curSelected != 999) // shit mf
@@ -177,8 +145,8 @@ vol += 10;
 						ctrl.targetY = curSelected - 0;
 						grpControls.add(ctrl);
 						case 1:
-							PreferencesOptions.HideHud = !PreferencesOptions.HideHud;
-							var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Timbe Bar " + (PreferencesOptions.HideHud ? "off" : "on"), true, false);
+							PreferencesOptions.TimeBar = !PreferencesOptions.TimeBar;
+							var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Timbe Bar " + (PreferencesOptions.TimeBar ? "off" : "on"), true, false);
 							ctrl.isMenuItem = true;
 							ctrl.targetY = curSelected - 1;
 							grpControls.add(ctrl);
