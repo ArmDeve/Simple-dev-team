@@ -136,9 +136,7 @@ class CreditsState extends MusicBeatState
 
                 if (controls.BACK)
                     {
-                        if (PreferencesOptions.Fps)
                         Main.toggleMem(true);
-                        
                        nextState(new MainMenuState());
                     }
     }

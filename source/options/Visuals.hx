@@ -54,15 +54,15 @@ controlsStrings = CoolUtil.coolStringFile(
 	"\nHide Hud "           + (!PreferencesOptions.HideHud ? "off" : "on") +
 	"\nTime Bar "           + (!PreferencesOptions.TimeBar ? "off" : "on") +
 	"\nAntialiasing "       + (!PreferencesOptions.Antialiasing ? "off" : "on") +
-	"\nFullscreen "         + (!PreferencesOptions.FullScreen ? "off" : "on") +
-	"\nFPS "         + (!PreferencesOptions.Fps ? "off" : "on")
+	"\nNote Splashes "       + (!PreferencesOptions.NoteSplash ? "off" : "on") +
+	"\nFullscreen "         + (!PreferencesOptions.FullScreen ? "off" : "on")
 ); 
 descriptions = [
 	'Show or hide hud',
 	'Show or hide time bar',
 	'Sprites Quality',
-	'Activate Full Screen',
-	'Show or hide FPS'
+	'Show or hide note splashes',
+	'Activate Full Screen'
 ];
 
 
@@ -189,19 +189,18 @@ vol += 10;
 							ctrl.targetY = curSelected - 2;
 							grpControls.add(ctrl);
 						case 3:
-							PreferencesOptions.FullScreen = !PreferencesOptions.FullScreen;
-							var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Fullscreen " + (PreferencesOptions.FullScreen ? "off" : "on"), true, false);
+							PreferencesOptions.NoteSplash = !PreferencesOptions.NoteSplash;
+							var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Note Splashes " + (PreferencesOptions.NoteSplash ? "off" : "on"), true, false);
 							ctrl.isMenuItem = true;
 							ctrl.targetY = curSelected - 3;
 							grpControls.add(ctrl);
-							FlxG.fullscreen = PreferencesOptions.FullScreen;
 						case 4:
-							PreferencesOptions.Fps = !PreferencesOptions.Fps;
-							var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "FPS " + (PreferencesOptions.Fps ? "off" : "on"), true, false);
+							PreferencesOptions.FullScreen = !PreferencesOptions.FullScreen;
+							var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Fullscreen " + (PreferencesOptions.FullScreen ? "off" : "on"), true, false);
 							ctrl.isMenuItem = true;
 							ctrl.targetY = curSelected - 4;
 							grpControls.add(ctrl);
-							Main.toggleMem(PreferencesOptions.Fps);
+							FlxG.fullscreen = PreferencesOptions.FullScreen;
 				}
 			}
 		FlxG.save.flush();

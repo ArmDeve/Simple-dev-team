@@ -220,7 +220,7 @@ class PlayState extends MusicBeatState
 		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
 		var sploosh = new NoteSplash(100, 100, 0);
 		sploosh.alpha = 0.1;
-		grpNoteSplashes.add(sploosh);
+		if (PreferencesOptions.NoteSplash)grpNoteSplashes.add(sploosh);
 
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);
@@ -717,7 +717,7 @@ add(gf);
 
 		strumLineNotes = new FlxTypedGroup<FlxSprite>();
 		add(strumLineNotes);
-		add(grpNoteSplashes);
+		if (PreferencesOptions.NoteSplash)add(grpNoteSplashes);
 
 		hudGroup = new FlxTypedGroup<FlxSprite>();
 		add(hudGroup);
@@ -2057,7 +2057,7 @@ add(musicTimeInfo);
 			score = 250;
 			var recycledNote = grpNoteSplashes.recycle(NoteSplash);
 			recycledNote.setupNoteSplash(note.x, note.y, note.noteData);
-			grpNoteSplashes.add(recycledNote);
+			if (PreferencesOptions.NoteSplash)grpNoteSplashes.add(recycledNote);
 
 			goodHitsCounter += 1;
 		}
