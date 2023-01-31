@@ -254,7 +254,7 @@ class Character extends FlxSprite
 
 				playAnim('idle');
 			case 'monster':
-				tex = Paths.getSparrowAtlas(PlayState.monsterAss_sets);
+				tex = Paths.getSparrowAtlas(PlayState.monsterAss_sets); // omg ams big brain
 				frames = tex;
 				animation.addByPrefix('idle', 'monster idle', 24, false);
 				animation.addByPrefix('singUP', 'monster up note', 24, false);

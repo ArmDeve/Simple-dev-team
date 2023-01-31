@@ -57,7 +57,7 @@ class CreditsState extends MusicBeatState
         box.antialiasing = PreferencesOptions.Antialiasing;
         add(box);
 
-        desc = new FlxText(0, 0, 0, CredsStuff.creditsStuff[0][1] + '\n\n\n' + CredsStuff.creditsStuff[0][2], 60);
+        desc = new FlxText(0, 0, 682, CredsStuff.creditsStuff[0][1] + '\n\n\n' + CredsStuff.creditsStuff[0][2], 60);
         //desc.x = 531;
         desc.y = 90;
         desc.scrollFactor.set();
@@ -238,41 +238,34 @@ class CredsStuff
 	[
 	'AmsDev', // name|icon
 	'Main Programmer', // work
-	'are you sure you re\nnot gay?\nprove otherwise lol\npls suscribe to my\nchannel XD', // sentence
+	'are you sure you re not gay? prove otherwise lol pls suscribe to my channel XD', // sentence
 	'#727FB3', // color
 	'https://www.youtube.com/channel/UCLiN7NfSI61E7Fm6g-isUGA' // link
 	],
 	[
     'MrNiz',
 	'Extra Programmer',
-	'Pixel Transition\nCoder',
+	'Pixel Transition Coder',
 	'#FFFFFF',
 	'https://twitter.com/MrNizy'
 	],
 	[
-	'AngelUchiha', 
-	'Voice Actor', 
-	'If you feel so dumb\nthink about me, you\nwill feel better',
-	'#2C2624',
-	'https://twitter.com/AngelUchihaaa'
-	],
-	[
 	'AssmanBruh!',
 	'Main Artist',
-	'Hi bro im assman\nPlaza good',
+	'Hi bro im assman Plaza good',
 	'#FFFFFF',
 	'https://www.youtube.com/@assmanbruh7030'
 	],
     [
     'Jarcor',
     'Dead OST Creator',
-    'UwU',
+    'ETIQUETAAAA',
     '#FF4F4F',
     'https://www.youtube.com/@assmanbruh7030'
     ],
     [
     'Qbo',
-    'Video Trailer',
+    'Trailer Editor',
     'ANACHEI',
     '#339999',
     'https://www.youtube.com/@assmanbruh7030'
@@ -287,21 +280,21 @@ class CredsStuff
 	[
 	'DrawPant',
 	'Extra Animator',
-	'hi guys im sas,\nplay friday night\nrayman mod',
+	'hi guys im sas, play friday night rayman mod',
 	'#FF33FF',
 	'https://twitter.com/DrawPant'
 	],
 	[
 	'HiroBerserk',
 	'App Icon Artist',
-	'Tmr pe\n(Im peruvian XD)',
+	'Tmr pe',
 	'#3B93C6',
 	'https://twitter.com/berserk_hiro?t=IGJ8m9FVHz-ugqw1aYsRJA&s=09'
 	],
 	[
 	'Bit',
 	'Ratings Artist',
-	'I am the least fan\nand burn Paraguay',
+	'I am the least fan and burn Paraguay',
 	'#FFFFFF',
 	'https://twitter.com/Kasler_dumb'
 	]

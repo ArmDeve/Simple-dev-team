@@ -344,23 +344,24 @@ icon.antialiasing = PreferencesOptions.Antialiasing;
 		missesText.text = "Misses: " + lerpMisses;
 		gdhtsText.text = "GoodHits: " + lerpGD;
 		comboText.text = "Combo: " + lerpCombo + '%';
+		var brrrrskibiridomdomdomdomyesyesyes:Bool = false;
+		
+		var controlsOnFreeplay = [controls.UP_P, controls.DOWN_P, controls.LEFT_P, controls.RIGHT_P, controls.ACCEPT, controls.BACK];
+		if (brrrrskibiridomdomdomdomyesyesyes)
+		controlsOnFreeplay = [false, false, false, false, false, false]; // Prevent player input for no transition bugs
 
-		var upP = controls.UP_P;
-		var downP = controls.DOWN_P;
-		var accepted = controls.ACCEPT;
-
-		if (upP)
+		if (controlsOnFreeplay[0])
 		{
 			changeSelection(-1);
 		}
-		if (downP)
+		if (controlsOnFreeplay[1])
 		{
 			changeSelection(1);
 		}
 
-		if (controls.LEFT_P)
+		if (controlsOnFreeplay[2])
 			changeDiff(-1);
-		if (controls.RIGHT_P)
+		if (controlsOnFreeplay[3])
 			changeDiff(1);
 
 		if (FlxG.mouse.wheel != 0)
@@ -378,7 +379,7 @@ diffSHIT = curDifficulty;
 			openSubState(new RatingsSubState(songSHIT, diffSHIT));
 			}
 
-		if (controls.BACK)
+		if (controlsOnFreeplay[5])
 		{
 			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {
 				onComplete: function(twn:FlxTween) {
@@ -390,14 +391,13 @@ diffSHIT = curDifficulty;
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 		}
 
-		if (accepted)
+		if (controlsOnFreeplay[4])
 		{
 			FlxG.sound.music.fadeOut(1, 0);
 			if (FlxG.sound.music != null)
 				FlxG.sound.music.stop();
-
 			FlxG.sound.play(Paths.sound('confirmMenu'));
-
+			brrrrskibiridomdomdomdomyesyesyes = true;
 					new FlxTimer().start(1, function(tmr:FlxTimer)
 						{
 				var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty);

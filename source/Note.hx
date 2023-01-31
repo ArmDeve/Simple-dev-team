@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxSprite;
+import options.PreferencesOptions;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
@@ -144,6 +145,7 @@ class Note extends FlxSprite
 			}
 
 			updateHitbox();
+            flipY = PreferencesOptions.DownScroll;
 
 			x -= width / 2;
 

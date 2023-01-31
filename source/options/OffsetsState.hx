@@ -43,7 +43,6 @@ var bg:FlxSprite;
     override function create()
     {
 		FlxG.mouse.visible = true;
-
 		#if desktop
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Options Menu(Offsets)", null);
@@ -53,6 +52,7 @@ var bg:FlxSprite;
 		bg.setGraphicSize(Std.int(bg.width * 1.1));
 		bg.updateHitbox();
 		bg.screenCenter();
+		bg.scrollFactor.set();
 		bg.color = FlxColor.GRAY;
 		bg.antialiasing = PreferencesOptions.Antialiasing;
 		add(bg);

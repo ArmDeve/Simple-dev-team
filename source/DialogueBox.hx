@@ -240,9 +240,7 @@ else
 				swagDialogue.sounds = [FlxG.sound.load(Paths.sound('bf'), 0.6)];
 			case 'gf':
 				swagDialogue.sounds = [FlxG.sound.load(Paths.sound('gf'), 0.6)];
-			case 'senpai':
-				swagDialogue.sounds = [FlxG.sound.load(Paths.sound('pixelText'), 0.6)];
-			case 'bf-pixel':
+			case 'senpai' | 'bf-pixel':
 				swagDialogue.sounds = [FlxG.sound.load(Paths.sound('pixelText'), 0.6)];
 		}
 
@@ -306,29 +304,14 @@ else
 
 		switch (curCharacter)
 		{
-			case 'gf':
+				case 'senpai' | 'gf':
 				portraitRight.visible = false;
 				if (!portraitLeft.visible)
 				{
 					portraitLeft.visible = true;
 					portraitLeft.animation.play('enter');
 				}
-			case 'bf':
-				portraitLeft.visible = false;
-				if (!portraitRight.visible)
-				{
-					portraitRight.visible = true;
-					portraitRight.animation.play('enter');
-				}
-
-				case 'senpai':
-				portraitRight.visible = false;
-				if (!portraitLeft.visible)
-				{
-					portraitLeft.visible = true;
-					portraitLeft.animation.play('enter');
-				}
-			case 'bf-pixel':
+			case 'bf-pixel' | 'bf':
 				portraitLeft.visible = false;
 				if (!portraitRight.visible)
 				{

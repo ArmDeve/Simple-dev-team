@@ -11,6 +11,7 @@ class ResetScore extends MusicBeatSubstate
     var reset:FlxSprite;
     override function create()
         {
+            FlxG.mouse.visible = true;
             super.create();
 
             var bg = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);

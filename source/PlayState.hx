@@ -153,10 +153,10 @@ class PlayState extends MusicBeatState
 	var goodHitsCounter:Int = 0;
 	var songScore:Int = 0;
 	var scoreTxt:FlxText;
+	var strums:Bool = false;
 	var comboBreaks:Int = 0;
 	var ratingABCD:String = 'NONE';
 	var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
-	var start:Bool = false;
 
 	public static var iconRotate:Bool = false;
 
@@ -884,7 +884,6 @@ add(musicTimeInfo);
 		musicTimeInfo.cameras = [camHUD];
 		strumLineNotes.cameras = [camHUD];
 		doof.cameras = [camHUD];
-		start = false;
 
 			boxUp = new FlxSprite(0, -120);
 					boxUp.makeGraphic(FlxG.width, 120, FlxColor.BLACK);
@@ -992,6 +991,8 @@ add(musicTimeInfo);
 		generateStaticArrows(0);
 		generateStaticArrows(1);
 
+		strums = false;
+
 		talking = false;
 		startedCountdown = true;
 		Conductor.songPosition = 0;
@@ -1084,7 +1085,7 @@ add(musicTimeInfo);
 
 			boyfriend.playAnim('idle');
 		dad.dance();
-			start = true;
+		strums = true;
 						}
 					});
 
@@ -2227,7 +2228,7 @@ rating.cameras = [camHUD];
 		];
 
 		// Prevent player input if botplay is on
-		if(PreferencesOptions.AutoPlay)
+		if(PreferencesOptions.AutoPlay || strums == false)
 		{
 			holdArray = [false, false, false, false];
 			pressArray = [false, false, false, false];
@@ -2379,7 +2380,7 @@ rating.cameras = [camHUD];
 
 						playerStrums.forEach(function(spr:StaticStrums)
 						{
-						   spr.playConfirmData(true);
+						   spr.playConfirmData(false);
 						});
 				}
 			}
@@ -2388,7 +2389,7 @@ rating.cameras = [camHUD];
 	if (PreferencesOptions.AutoPlay){
 		playerStrums.forEach(function(spr:StaticStrums)
 		{
-			spr.playConfirmData(true);
+			spr.playConfirmData(false);
 		});
 	}
 
@@ -2743,30 +2744,6 @@ rating.cameras = [camHUD];
 
 	var lightningStrikeBeat:Int = 0;
 	var lightningOffset:Int = 8;
-
-	inline static public function deathDialogues(){
-		if (PlayState.SONG.player1 == 'bf-pixel')
-			{
-				FlxG.sound.play(Paths.sound('dialogs/extras-' + FlxG.random.int(1, 8)), 1, false, null, true, function onComplete() 
-					{
-						FlxG.sound.music.fadeIn(0.2, 0.2, 1);
-					});
-			}
-			else if (PlayState.SONG.player1 == 'bf' || PlayState.SONG.player1 == 'bf-car')
-				{
-					FlxG.sound.play(Paths.sound('dialogs/dialogues-' + FlxG.random.int(1, 11)), 1, false, null, true, function onComplete() 
-						{
-							FlxG.sound.music.fadeIn(0.2, 0.2, 1);
-						});
-				}
-				else if (FlxG.random.bool(109))
-					{
-						FlxG.sound.play(Paths.sound('dialogs/wrong-line'), 1, false, null, true, function onComplete() 
-							{
-								FlxG.sound.music.fadeIn(0.2, 0.2, 1);
-							});
-					}
-	}
 
 	function blammedEvent()
 		{

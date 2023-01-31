@@ -25,10 +25,6 @@ class SimpleEngineIntro extends MusicBeatState
                 {
             FlxG.sound.play(Paths.sound('confirmMenu'));
                 });
-                new FlxTimer().start(0.28, function(tmr:FlxTimer)
-                    {
-                FlxG.sound.play(Paths.sound('intro-dialog'), 1, false, null, true);
-                    });
 
             logo = new FlxSprite();
             logo.scale.set(1.2, 1.2);
